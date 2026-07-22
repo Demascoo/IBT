@@ -1,4 +1,6 @@
 Spending Summary
+====================
+
 Almaz: 1800.0 ETB
 Dawit: 700.0 ETB
 Tigist: 200.0 ETB
