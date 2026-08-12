@@ -2,22 +2,18 @@ body {
   font-family: sans-serif;
   padding: 20px;
 }
-
 #list {
   list-style: none;
   padding: 0;
 }
-
 li {
   margin-bottom: 8px;
   cursor: pointer;
 }
-
 .done {
   text-decoration: line-through;
   color: gray;
 }
-
 .del {
   margin-left: 15px;
   color: red;
