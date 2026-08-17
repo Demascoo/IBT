@@ -1,46 +1,34 @@
-// setTimeout(()=>{
-//     console.log("first")
-// },3000);
+const list = document.querySelector("#list");
+const loading = document.querySelector("#loading");
+const refresh = document.querySelector("#refresh");
 
-// let promise=new promise((resolve,reject)=>{
-//     resolve("second")
-// })
+async function load() {
+  loading.textContent = "Loading...";
+  list.innerHTML = "";
 
-// promise.then((data) => console.log(data))
+  try {
+    const res = await fetch("https://dummyjson.com/recipes");
 
-// console.log("third")
+    if (!res.ok) {
+      throw new Error("Request failed");
+    }
 
-const order = new Promise((resolve, reject) => {
-  const success = true;
+    const data = await res.json();
 
-  if (success) {
-    resolve("Food is ready");
-  } else {
-    reject("Kitchen is closed");
+    data.recipes.forEach(function (dish) {
+      const li = document.createElement("li");
+
+      li.textContent = dish.name;
+
+      list.append(li);
+    });
+  } catch (error) {
+    list.textContent = "Could not load dishes.";
+  } finally {
+    loading.textContent = "";
   }
-});
+}
 
-const promise = new Promise((resolve) => {
-  resolve("Food is ready");
-});
+refresh.addEventListener("click", load);
 
-promise.then(function (result) {
-  console.log(result);
-});
-const promise = new Promise((resolve, reject) => {
-  reject("Kitchen is closed");
-});
-
-// promise.catch(function (error) {
-//   console.log(error);
-// });
-
-promise.then((result) => {
-    console.log(result);
-  })
-  .catch((error) => {
-    console.log(error);
-  })
-  .finally(() => {
-    console.log("Finished");
-  });
+load();
