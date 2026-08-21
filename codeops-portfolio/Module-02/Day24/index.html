@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Addis Eats</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <h1>Addis Eats</h1>
+      <p class="tagline">The best taste in town</p>
+      <div class="search-wrap">
+        <label for="search" class="visually-hidden">Search dishes</label>
+        <input
+          id="search"
+          type="search"
+          placeholder="Search for doro wat, shiro, kitfo…"
+          autocomplete="off"
+        />
+      </div>
+    </header>
+
+    <main>
+      <section id="menu" class="menu" aria-label="Menu">
+        <p class="status-message">Loading menu…</p>
+      </section>
+
+      <aside id="cart" class="cart" aria-label="Your order">
+        <div id="cart-content"></div>
+
+        <form id="checkout" novalidate>
+          <h2>Checkout</h2>
+          <label for="name"
+            >Name
+            <input id="name" name="name" required />
+          </label>
+          <label for="phone"
+            >Phone
+            <input id="phone" name="phone" placeholder="09xxxxxxxx" />
+          </label>
+          <label for="area"
+            >Delivery area
+            <select id="area" name="area">
+              <option>Bole</option>
+              <option>Kazanchis</option>
+              <option>Megenagna</option>
+            </select>
+          </label>
+          <p id="form-error" class="error" aria-live="polite"></p>
+          <button type="submit">Place order</button>
+        </form>
+
+        <div id="confirmation" class="confirmation" hidden></div>
+      </aside>
+    </main>
+
+    <footer class="site-footer">
+      <p>Addis Eats Bole, Addis Ababa</p>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>
