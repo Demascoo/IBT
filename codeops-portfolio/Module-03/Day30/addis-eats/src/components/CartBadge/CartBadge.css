@@ -1,0 +1,23 @@
+.cart-badge {
+  position: relative;
+  display: inline-block;
+  padding: 5px 10px;
+}
+
+.cart-icon {
+  font-size: 24px;
+}
+
+.badge-count {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #d32f2f;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 12px;
+  font-weight: bold;
+  min-width: 20px;
+  text-align: center;
+}
