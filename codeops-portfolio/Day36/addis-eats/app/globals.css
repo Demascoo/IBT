@@ -1,0 +1,45 @@
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, sans-serif;
+  background: #fafafa;
+  color: #111;
+}
+
+nav {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem 2rem;
+  background: #111;
+}
+
+nav a { color: white; text-decoration: none; }
+nav a:hover { text-decoration: underline; }
+
+main { padding: 2rem; max-width: 720px; margin: 0 auto; }
+
+.skeleton {
+  padding: 2rem;
+  background: #eee;
+  border-radius: 8px;
+  animation: pulse 1.2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.5; }
+}
+
+.error-box {
+  padding: 1rem;
+  border: 1px solid #c00;
+  background: #fee;
+  border-radius: 8px;
+}
+
+.error-box button {
+  margin-top: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  cursor: pointer;
+}
