@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { allDishes, specialDishes } from "@/lib/dishes";
 import DishList from "./DishList";
 import SpecialsStrip from "./SpecialsStrip";
+import FilterShell from "./FilterShell";
 
 export const revalidate = 3600;
 
@@ -38,7 +39,9 @@ export default function MenuPage() {
       <SpecialsStrip dishes={specialDishes} />
 
       <Suspense fallback={<div className="skeleton">Loading dishes…</div>}>
-        <Dishes />
+        <FilterShell>
+          <Dishes />
+        </FilterShell>
       </Suspense>
     </>
   );

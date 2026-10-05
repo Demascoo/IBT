@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getDishBySlug, getAllSlugs } from "@/lib/dishes";
+import AddToCartButton from "../AddToCartButton";
 
 export function generateStaticParams() {
   return getAllSlugs().map((slug) => ({ id: slug }));
@@ -57,7 +58,9 @@ export default async function DishPage({ params }) {
           )}
         </ul>
 
-        <h3>Ingredients</h3>
+        <AddToCartButton dish={dish} />
+
+        <h3 style={{ marginTop: "2rem" }}>Ingredients</h3>
         <ul style={{ paddingLeft: "1.2rem" }}>
           {dish.ingredients.map((ing) => (
             <li key={ing}>{ing}</li>
