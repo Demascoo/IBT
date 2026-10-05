@@ -7,20 +7,28 @@ body {
   color: #111;
 }
 
-nav {
+header nav {
   display: flex;
   gap: 1rem;
   padding: 1rem 2rem;
   background: #111;
 }
 
-nav a { color: white; text-decoration: none; }
-nav a:hover { text-decoration: underline; }
+header nav a { color: white; text-decoration: none; }
+header nav a:hover { text-decoration: underline; }
 
-main { padding: 2rem; max-width: 720px; margin: 0 auto; }
+main { padding: 2rem; max-width: 960px; margin: 0 auto; }
+
+footer {
+  padding: 1.5rem 2rem;
+  background: #111;
+  color: #bbb;
+  text-align: center;
+  margin-top: 3rem;
+}
 
 .skeleton {
-  padding: 2rem;
+  padding: 1rem;
   background: #eee;
   border-radius: 8px;
   animation: pulse 1.2s infinite;
@@ -43,3 +51,25 @@ main { padding: 2rem; max-width: 720px; margin: 0 auto; }
   padding: 0.4rem 0.8rem;
   cursor: pointer;
 }
+
+.menu-shell {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+  padding: 2rem;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.menu-sidebar {
+  min-width: 180px;
+  border-right: 1px solid #ddd;
+  padding-right: 1rem;
+  position: sticky;
+  top: 1rem;
+}
+
+.menu-sidebar ul { list-style: none; padding: 0; margin: 0; }
+.menu-sidebar li { padding: 0.3rem 0; }
+
+.menu-content { flex: 1; min-width: 0; }
