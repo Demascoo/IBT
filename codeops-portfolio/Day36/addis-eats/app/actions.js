@@ -25,9 +25,7 @@ export async function placeOrder(prevState, formData) {
   }
 
   const order = await createOrder(parsed.data);
-
   revalidatePath("/orders");
-
   return { ok: true, id: order.id };
 }
 
@@ -41,7 +39,6 @@ export async function cancelOrder(orderId) {
 
   await markCancelled(orderId);
   revalidatePath("/orders");
-
   return { ok: true };
 }
 

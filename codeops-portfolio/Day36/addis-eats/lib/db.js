@@ -62,8 +62,7 @@ export const db = {
 };
 
 export async function getDish(id) {
-  const dish = mockDishes.find((d) => d.id === id);
-  return dish || null;
+  return mockDishes.find((d) => d.id === id) || null;
 }
 
 export async function createOrder(data) {
@@ -74,21 +73,17 @@ export async function createOrder(data) {
     userId: mockSessionUser.id,
     createdAt: new Date().toISOString(),
   };
-
   mockOrders.push(newOrder);
   return newOrder;
 }
 
 export async function getOrder(id) {
-  const order = mockOrders.find((o) => o.id === id);
-  return order || null;
+  return mockOrders.find((o) => o.id === id) || null;
 }
 
 export async function markCancelled(id) {
   const order = mockOrders.find((o) => o.id === id);
-  if (!order) {
-    throw new Error("Order not found");
-  }
+  if (!order) throw new Error("Order not found");
   order.status = "CANCELLED";
   order.updatedAt = new Date().toISOString();
   return order;

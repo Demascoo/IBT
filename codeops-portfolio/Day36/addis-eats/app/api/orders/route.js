@@ -27,17 +27,13 @@ export async function POST(request) {
     });
     if (!dish) {
       return Response.json(
-        {
-          error: "No such dish",
-          fieldErrors: { dishId: ["Dish not found"] },
-        },
+        { error: "No such dish", fieldErrors: { dishId: ["Dish not found"] } },
         { status: 422 },
       );
     }
   }
 
   const order = await createOrder(parsed.data);
-
   return Response.json(order, { status: 201 });
 }
 

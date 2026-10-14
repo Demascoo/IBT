@@ -14,12 +14,10 @@ export const orderSchema = z.object({
     ),
 
   dishId: z.string().optional(),
-
   quantity: z
     .number()
     .min(1, "Quantity must be at least 1")
     .optional()
     .default(1),
-
   notes: z.string().max(200, "Notes cannot exceed 200 characters").optional(),
 });

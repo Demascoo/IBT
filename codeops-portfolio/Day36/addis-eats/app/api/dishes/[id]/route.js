@@ -7,6 +7,5 @@ export async function GET(request, { params }) {
   if (!dish) {
     return Response.json({ error: "No such dish", id }, { status: 404 });
   }
-
   return Response.json(dish, { status: 200 });
 }

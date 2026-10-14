@@ -7,10 +7,7 @@ export async function GET(request) {
   const category = searchParams.get("category");
 
   let dishes = await db.dish.findMany();
-
-  if (category) {
-    dishes = dishes.filter((d) => d.category === category);
-  }
+  if (category) dishes = dishes.filter((d) => d.category === category);
 
   return Response.json(
     { status: "ok", count: dishes.length, data: dishes },
