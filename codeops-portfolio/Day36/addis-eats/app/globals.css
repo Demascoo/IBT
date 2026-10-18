@@ -73,3 +73,17 @@ footer {
 .menu-sidebar li { padding: 0.3rem 0; }
 
 .menu-content { flex: 1; min-width: 0; }
+.menu-shell {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.menu-sidebar {
+  width: 200px;
+  flex-shrink: 0;
+}
+
+.menu-content {
+  flex-grow: 1;
+}

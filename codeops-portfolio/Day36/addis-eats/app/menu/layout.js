@@ -1,13 +1,19 @@
 import Link from "next/link";
-import { allDishes } from "@/lib/dishes";
+import { db } from "@/lib/db";
 
-const categories = Array.from(new Set(allDishes.map((d) => d.category))).sort();
 
-export default function MenuLayout({ children }) {
+async function getCategories() {
+  const dishes = await db.dish.findMany();
+  return Array.from(new Set(dishes.map((d) => d.category))).sort();
+}
+
+export default async function MenuLayout({ children }) {
+  const categories = await getCategories();
+
   return (
     <div className="menu-shell">
       <aside className="menu-sidebar">
-        <h3>Categories</h3>
+        <h3 style={{ marginTop: 0 }}>Categories</h3>
         <ul>
           <li>
             <Link href="/menu">All dishes</Link>
