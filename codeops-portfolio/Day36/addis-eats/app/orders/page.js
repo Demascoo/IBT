@@ -3,47 +3,48 @@ import { listOrders } from "@/app/actions";
 
 export const dynamic = "force-dynamic";
 
+export const metadata = {
+  title: "Your Orders",
+};
+
 export default async function OrdersPage() {
   const orders = await listOrders();
 
   return (
     <main>
-      <h1>Your orders</h1>
+      <h1>Your Orders</h1>
 
       {orders.length === 0 ? (
         <p>
-          No orders yet. <Link href="/checkout">Place one →</Link>
+          No orders yet. <Link href="/menu">Browse the menu →</Link>
         </p>
       ) : (
-        <ul style={{ listStyle: "none", padding: 0 }}>
+        <div>
           {orders.map((o) => (
-            <li
-              key={o.id}
-              style={{
-                border: "1px solid #eee",
-                borderRadius: 8,
-                padding: "0.75rem",
-                marginBottom: "0.5rem",
-                opacity: o.status === "CANCELLED" ? 0.6 : 1,
-              }}
-            >
-              <Link href={`/orders/${o.id}`} style={{ color: "inherit" }}>
-                <strong>{o.id}</strong>
-              </Link>{" "}
-              — {o.name} ({o.phone}){o.dishId && <> · dish: {o.dishId}</>}
-              {o.quantity && <> × {o.quantity}</>}
-              <br />
-              <small style={{ color: "#666" }}>
-                Status: {o.status} · {new Date(o.createdAt).toLocaleString()}
-              </small>
+            <div key={o.id} className="order-card">
+              <div className="order-header">
+                <Link href={`/orders/${o.id}`}>
+                  <strong>Order {o.id}</strong>
+                </Link>
+                <span className="order-status">{o.status}</span>
+              </div>
+              <p>
+                {o.name} — {o.phone}
+              </p>
               {o.notes && (
-                <div style={{ fontSize: 13, color: "#555", marginTop: 4 }}>
+                <p
+                  style={{
+                    color: "var(--text-muted)",
+                    fontSize: "0.9rem",
+                    marginTop: "0.5rem",
+                  }}
+                >
                   “{o.notes}”
-                </div>
+                </p>
               )}
-            </li>
+            </div>
           ))}
-        </ul>
+        </div>
       )}
     </main>
   );

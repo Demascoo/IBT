@@ -1,7 +1,4 @@
-export const metadata = {
-  title: "Your Cart",
-  description: "Review your order before checkout.",
-};
+"use client";
 
 import Link from "next/link";
 import { useCart } from "@/app/providers";
@@ -23,23 +20,22 @@ export default function CartPage() {
             {items.map((i) => (
               <li
                 key={i.id}
-                style={{ padding: "0.5rem 0", borderBottom: "1px solid #eee" }}
+                style={{
+                  padding: "0.5rem 0",
+                  borderBottom: "1px solid var(--border)",
+                }}
               >
                 <strong>{i.name}</strong> × {i.qty} — {i.price * i.qty} ETB
               </li>
             ))}
           </ul>
-          <p style={{ fontWeight: "bold" }}>Total: {total} ETB</p>
+          <p style={{ fontWeight: "bold", marginTop: "1rem" }}>
+            Total: {total} ETB
+          </p>
           <button
             onClick={clearCart}
-            style={{
-              padding: "0.5rem 1rem",
-              background: "#c00",
-              color: "#fff",
-              border: "none",
-              borderRadius: 6,
-              cursor: "pointer",
-            }}
+            className="btn"
+            style={{ background: "#c00", marginTop: "1rem" }}
           >
             Clear cart
           </button>
