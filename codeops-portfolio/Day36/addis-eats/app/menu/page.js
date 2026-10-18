@@ -3,6 +3,7 @@ import { allDishes, specialDishes } from "@/lib/dishes";
 import DishList from "./DishList";
 import SpecialsStrip from "./SpecialsStrip";
 import FilterShell from "./FilterShell";
+import SearchBox from "./SearchBox";
 
 export const revalidate = 3600;
 
@@ -37,6 +38,7 @@ export default function MenuPage() {
       <h1>Our menu</h1>
 
       <SpecialsStrip dishes={specialDishes} />
+      <SearchBox />
 
       <Suspense fallback={<div className="skeleton">Loading dishes…</div>}>
         <FilterShell>

@@ -27,8 +27,10 @@ export default async function OrdersPage() {
                 opacity: o.status === "CANCELLED" ? 0.6 : 1,
               }}
             >
-              <strong>{o.id}</strong> — {o.name} ({o.phone})
-              {o.dishId && <> · dish: {o.dishId}</>}
+              <Link href={`/orders/${o.id}`} style={{ color: "inherit" }}>
+                <strong>{o.id}</strong>
+              </Link>{" "}
+              — {o.name} ({o.phone}){o.dishId && <> · dish: {o.dishId}</>}
               {o.quantity && <> × {o.quantity}</>}
               <br />
               <small style={{ color: "#666" }}>
