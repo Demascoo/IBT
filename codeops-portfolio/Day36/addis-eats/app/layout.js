@@ -1,15 +1,31 @@
+import { Inter } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
 import { Providers } from "./providers";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
+const inter = Inter({ subsets: ["latin"], display: "swap" });
+
 export const metadata = {
-  title: "Addis Eats",
+  metadataBase: new URL("https://addis-eats.example.com"),
+  title: {
+    template: "%s | Addis Eats",
+    default: "Addis Eats — Food Delivery in Addis Ababa",
+  },
+  description:
+    "Order Doro Wat, Tibs, and Kitfo from local kitchens. Delivered across Addis.",
+  openGraph: {
+    title: "Addis Eats",
+    description: "Order authentic Ethiopian food, delivered.",
+    url: "/",
+    siteName: "Addis Eats",
+    locale: "en_ET",
+    type: "website",
+  },
 };
 
 export default async function RootLayout({ children }) {
-  // Check if user is signed in
   const cookieStore = await cookies();
   const session = cookieStore.get("session");
 
@@ -22,7 +38,7 @@ export default async function RootLayout({ children }) {
 
   return (
     <html lang="en">
-      <body>
+      <body className={inter.className}>
         <Providers>
           <header>
             <nav>

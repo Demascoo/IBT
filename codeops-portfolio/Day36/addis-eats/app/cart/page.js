@@ -1,17 +1,18 @@
-"use client";
+export const metadata = {
+  title: "Your Cart",
+  description: "Review your order before checkout.",
+};
 
 import Link from "next/link";
 import { useCart } from "@/app/providers";
 
 export default function CartPage() {
   const { items, clearCart } = useCart();
-
   const total = items.reduce((sum, i) => sum + i.price * i.qty, 0);
 
   return (
     <main>
       <h1>Your cart</h1>
-
       {items.length === 0 ? (
         <p>
           Your cart is empty. <Link href="/menu">Browse the menu →</Link>

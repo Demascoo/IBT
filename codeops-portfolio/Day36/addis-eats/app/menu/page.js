@@ -1,15 +1,23 @@
 import { Suspense } from "react";
-import { allDishes, specialDishes } from "@/lib/dishes";
+import { db } from "@/lib/db";
 import DishList from "./DishList";
-import SpecialsStrip from "./SpecialsStrip";
 import FilterShell from "./FilterShell";
 import SearchBox from "./SearchBox";
+
+export const metadata = {
+  title: "Our Menu",
+  description:
+    "Browse our full menu of traditional Ethiopian stews, tibs, and vegetarian platters.",
+  alternates: {
+    canonical: "/menu",
+  },
+};
 
 export const revalidate = 3600;
 
 async function getDishes() {
   await new Promise((r) => setTimeout(r, 1200));
-  return allDishes;
+  return db.dish.findMany();
 }
 
 async function Dishes() {
@@ -36,10 +44,7 @@ export default function MenuPage() {
   return (
     <>
       <h1>Our menu</h1>
-
-      <SpecialsStrip dishes={specialDishes} />
       <SearchBox />
-
       <Suspense fallback={<div className="skeleton">Loading dishes…</div>}>
         <FilterShell>
           <Dishes />
