@@ -10,7 +10,6 @@ export async function placeOrder(prevState, formData) {
   if (!user)
     return { ok: false, error: "You must be signed in to place an order." };
 
-  // Retrieve the items from the form data
   const itemsString = formData.get("cart_items");
   const items = itemsString ? JSON.parse(itemsString) : [];
 
@@ -21,6 +20,8 @@ export async function placeOrder(prevState, formData) {
   const raw = {
     name: formData.get("name"),
     phone: formData.get("phone"),
+    area: formData.get("area"),
+    total: Number(formData.get("total")),
     notes: formData.get("notes") || undefined,
   };
 
@@ -37,6 +38,7 @@ export async function placeOrder(prevState, formData) {
   });
 
   revalidatePath("/orders");
+  revalidatePath("/dashboard"); // Tell dashboard to refresh
   return { ok: true, id: order.id };
 }
 
@@ -50,6 +52,7 @@ export async function cancelOrder(orderId) {
 
   await markCancelled(orderId);
   revalidatePath("/orders");
+  revalidatePath("/dashboard");
   return { ok: true };
 }
 

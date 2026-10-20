@@ -38,6 +38,7 @@ export default async function RootLayout({ children }) {
               <Link href="/cart">Cart</Link>
               <Link href="/checkout">Checkout</Link>
               <Link href="/orders">Orders</Link>
+              <Link href="/dashboard">Dashboard</Link>
 
               {session ? (
                 <div

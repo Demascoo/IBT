@@ -9,7 +9,7 @@ export default function CheckoutPage() {
   const { items, clearCart } = useCart();
   const [state, formAction, pending] = useActionState(placeOrder, null);
 
-  // This will now only fire ONCE when the order is successful
+  // Clear cart on success
   useEffect(() => {
     if (state?.ok) {
       clearCart();
@@ -39,8 +39,8 @@ export default function CheckoutPage() {
           <p style={{ margin: "1rem 0" }}>
             Your order ID is <strong>{state.id}</strong>
           </p>
-          <Link href="/orders" className="btn" style={{ marginTop: "1rem" }}>
-            View My Orders
+          <Link href="/dashboard" className="btn" style={{ marginTop: "1rem" }}>
+            View Dashboard
           </Link>
         </div>
       ) : (
@@ -100,11 +100,13 @@ export default function CheckoutPage() {
           </div>
 
           <form action={formAction}>
+            {/* Hidden inputs to pass data to the server action */}
             <input
               type="hidden"
               name="cart_items"
               value={JSON.stringify(items)}
             />
+            <input type="hidden" name="total" value={total} />
 
             <div className="form-group">
               <label className="form-label">Name</label>
@@ -124,6 +126,26 @@ export default function CheckoutPage() {
               />
               {state?.fieldErrors?.phone && (
                 <p className="form-error">{state.fieldErrors.phone[0]}</p>
+              )}
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Neighbourhood (Area)</label>
+              <select
+                name="area"
+                required
+                className="form-input"
+                defaultValue=""
+              >
+                <option value="" disabled>
+                  Select your area...
+                </option>
+                <option value="Bole">Bole</option>
+                <option value="Kazanchis">Kazanchis</option>
+                <option value="Megenagna">Megenagna</option>
+              </select>
+              {state?.fieldErrors?.area && (
+                <p className="form-error">{state.fieldErrors.area[0]}</p>
               )}
             </div>
 
