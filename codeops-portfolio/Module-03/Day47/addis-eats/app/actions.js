@@ -4,6 +4,40 @@ import { revalidatePath } from "next/cache";
 import { orderSchema } from "@/lib/schema";
 import { createOrder, markCancelled, getOrder, db } from "@/lib/db";
 import { getSession } from "@/lib/session";
+import { cookies } from "next/headers";
+
+// ───────────────────────────────────────────────────────────
+// AUTHENTICATION
+// ───────────────────────────────────────────────────────────
+
+export async function authenticateUser(prevState, formData) {
+  const email = formData.get("email");
+  const password = formData.get("password");
+
+  if (!email || !password) return { error: "Missing fields" };
+
+  const users = await db.user.findMany();
+  const user = users.find((u) => u.email === email && u.password === password);
+
+  if (!user) {
+    return { error: "Invalid email or password" };
+  }
+
+  const cookieStore = await cookies();
+  cookieStore.set("session", user.id, {
+    httpOnly: true,
+    secure: false, // Set to false for Vercel previews
+    sameSite: "lax",
+    maxAge: 60 * 60 * 24 * 7,
+    path: "/",
+  });
+
+  return { success: true };
+}
+
+// ───────────────────────────────────────────────────────────
+// ORDERS
+// ───────────────────────────────────────────────────────────
 
 export async function placeOrder(prevState, formData) {
   const user = await getSession();
@@ -38,7 +72,7 @@ export async function placeOrder(prevState, formData) {
   });
 
   revalidatePath("/orders");
-  revalidatePath("/dashboard"); // Tell dashboard to refresh
+  revalidatePath("/dashboard");
   return { ok: true, id: order.id };
 }
 

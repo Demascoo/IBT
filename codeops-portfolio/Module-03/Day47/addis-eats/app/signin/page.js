@@ -1,38 +1,16 @@
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
-import { authenticateUser } from "@/lib/auth";
-import Link from "next/link";
+"use client";
 
-export default async function SignInPage({ searchParams }) {
-  const resolvedParams = await searchParams;
-  const nextUrl = resolvedParams?.next || "/";
+import { useActionState, useEffect } from "react";
+import { authenticateUser } from "@/app/actions";
 
-  async function signIn(formData) {
-    "use server";
-    const email = formData.get("email");
-    const password = formData.get("password");
+export default function SignInPage() {
+  const [state, formAction, pending] = useActionState(authenticateUser, null);
 
-    const user = await authenticateUser(email, password);
-
-    if (!user) {
-      redirect(`/signin?error=InvalidCredentials&next=${nextUrl}`);
+  useEffect(() => {
+    if (state?.success) {
+      window.location.href = "/orders";
     }
-
-    const cookieStore = await cookies();
-
-    // Set the session cookie to the user's ID
-    cookieStore.set("session", user.id, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 60 * 60 * 24 * 7, // 1 week
-      path: "/",
-    });
-
-    let next = nextUrl;
-    if (!next.startsWith("/")) next = "/";
-    redirect(next);
-  }
+  }, [state]);
 
   return (
     <div
@@ -53,10 +31,10 @@ export default async function SignInPage({ searchParams }) {
             fontSize: "0.9rem",
           }}
         >
-          {/* Try: customer@addis.com / password123 */}
+          Try: customer@addis.com / password123
         </p>
 
-        {resolvedParams?.error && (
+        {state?.error && (
           <div
             style={{
               padding: "0.75rem",
@@ -68,12 +46,12 @@ export default async function SignInPage({ searchParams }) {
               textAlign: "center",
             }}
           >
-            Invalid email or password.
+            {state.error}
           </div>
         )}
 
         <form
-          action={signIn}
+          action={formAction}
           style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
         >
           <div className="form-group">
@@ -100,10 +78,11 @@ export default async function SignInPage({ searchParams }) {
 
           <button
             type="submit"
+            disabled={pending}
             className="btn"
             style={{ width: "100%", marginTop: "1rem" }}
           >
-            Sign In
+            {pending ? "Signing in..." : "Sign In"}
           </button>
         </form>
       </div>
