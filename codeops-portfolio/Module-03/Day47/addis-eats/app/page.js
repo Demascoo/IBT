@@ -2,13 +2,10 @@ import Link from "next/link";
 import Image from "next/image";
 import { db } from "@/lib/db";
 
-// FORCE STATIC RENDERING
 export const dynamic = "force-static";
 
 export default async function HomePage() {
   const allDishes = await db.dish.findMany();
-
-  // Get 3 dishes to feature
   const featuredDishes = allDishes.filter((d) => d.isSpecial).slice(0, 3);
 
   return (
@@ -16,46 +13,71 @@ export default async function HomePage() {
       {/* ── HERO SECTION ── */}
       <section
         style={{
+          position: "relative",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
+          justifyContent: "center",
           textAlign: "center",
           padding: "6rem 2rem",
-          backgroundColor: "#1a1a1a",
-          borderBottom: "4px solid var(--brand)",
+          minHeight: "500px",
+          color: "white",
         }}
       >
-        <h1
+        {/* Use the local image with priority for LCP */}
+        <Image
+          src="/images/hero.jpg"
+          alt="Traditional Ethiopian food spread"
+          fill
+          priority
+          sizes="100vw"
+          style={{ objectFit: "cover", zIndex: -2 }}
+        />
+
+        {/* Dark overlay for text readability */}
+        <div
           style={{
-            fontSize: "3rem",
-            color: "#ffffff",
-            marginBottom: "1rem",
-            fontFamily: "serif",
+            position: "absolute",
+            inset: 0,
+            background: "rgba(0,0,0,0.6)",
+            zIndex: -1,
           }}
-        >
-          Addis Eats
-        </h1>
-        <p
-          style={{
-            fontSize: "1.2rem",
-            color: "#cccccc",
-            maxWidth: "600px",
-            margin: "0 auto 2rem",
-          }}
-        >
-          Traditional Ethiopian food, prepared fresh and delivered to your door.
-        </p>
-        <Link
-          href="/menu"
-          className="btn"
-          style={{
-            fontSize: "1.1rem",
-            padding: "0.8rem 2rem",
-            borderRadius: "4px",
-          }}
-        >
-          Order Now
-        </Link>
+        />
+
+        <div style={{ position: "relative", zIndex: 1 }}>
+          <h1
+            style={{
+              fontSize: "clamp(2.5rem, 5vw, 4rem)",
+              color: "#ffffff",
+              marginBottom: "1rem",
+              fontFamily: "serif",
+            }}
+          >
+            Addis Eats
+          </h1>
+          <p
+            style={{
+              fontSize: "1.2rem",
+              color: "#cccccc",
+              maxWidth: "600px",
+              margin: "0 auto 2rem",
+            }}
+          >
+            Traditional Ethiopian food, prepared fresh and delivered to your
+            door.
+          </p>
+          <Link
+            href="/menu"
+            className="btn"
+            style={{
+              fontSize: "1.1rem",
+              padding: "0.8rem 2rem",
+              borderRadius: "4px",
+            }}
+          >
+            Order Now
+          </Link>
+        </div>
       </section>
 
       {/* ── FEATURED DISHES ── */}
