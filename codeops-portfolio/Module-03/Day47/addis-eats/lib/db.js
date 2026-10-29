@@ -4,7 +4,6 @@ import path from "path";
 
 const mockDishes = menuData.data;
 
-
 const ordersFilePath = path.join(process.cwd(), "orders-db.json");
 
 // Helper to read from the file
@@ -47,7 +46,6 @@ export const db = {
       null,
   },
   order: {
-    // Read from the JSON file instead of memory
     findMany: async () => readOrders(),
   },
   user: {
@@ -55,8 +53,14 @@ export const db = {
   },
 };
 
+// Fetch a single dish by SLUG
 export async function getDish(slug) {
   return mockDishes.find((d) => d.slug === slug) || null;
+}
+
+// Get all slugs for generateStaticParams
+export function getAllSlugs() {
+  return mockDishes.map((d) => d.slug);
 }
 
 export async function createOrder(data) {
@@ -91,11 +95,4 @@ export async function markCancelled(id) {
 
   writeOrders(orders);
   return order;
-}
-
-export async function getSession() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("session")?.value;
-  if (!token) return null;
-  return mockUsers.find((u) => u.id === token) || null;
 }

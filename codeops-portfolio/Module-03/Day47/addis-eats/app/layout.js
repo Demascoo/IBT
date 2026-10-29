@@ -2,13 +2,14 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
 import { Providers } from "./providers";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 import { getSession } from "@/lib/session";
 
 const inter = Inter({ subsets: ["latin"], display: "swap" });
 
 export const metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL || "https://addis-eats.vercel.app",
+  ),
   title: {
     template: "%s | Addis Eats",
     default: "Addis Eats — Food Delivery",
@@ -16,14 +17,8 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }) {
+  // This will make the layout dynamic, BUT we will override it in pages.
   const session = await getSession();
-
-  async function signOut() {
-    "use server";
-    const store = await cookies();
-    store.delete("session");
-    redirect("/");
-  }
 
   return (
     <html lang="en">
@@ -38,7 +33,6 @@ export default async function RootLayout({ children }) {
               <Link href="/cart">Cart</Link>
               <Link href="/checkout">Checkout</Link>
               <Link href="/orders">Orders</Link>
-              <Link href="/dashboard">Dashboard</Link>
 
               {session ? (
                 <div
@@ -54,7 +48,14 @@ export default async function RootLayout({ children }) {
                   >
                     Hi, {session.name.split(" ")[0]}
                   </span>
-                  <form action={signOut} style={{ display: "inline" }}>
+                  {/* We use a form action for sign out to clear cookies */}
+                  <form
+                    action={async () => {
+                      "use server";
+                      const { cookies } = await import("next/headers");
+                      (await cookies()).delete("session");
+                    }}
+                  >
                     <button
                       type="submit"
                       className="btn btn-secondary"

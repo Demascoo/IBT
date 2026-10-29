@@ -2,6 +2,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { db } from "@/lib/db";
 
+// FORCE STATIC RENDERING
+export const dynamic = "force-static";
+
 export default async function HomePage() {
   const allDishes = await db.dish.findMany();
 
@@ -18,7 +21,7 @@ export default async function HomePage() {
           alignItems: "center",
           textAlign: "center",
           padding: "6rem 2rem",
-          backgroundColor: "#1a1a1a", // Solid dark background
+          backgroundColor: "#1a1a1a",
           borderBottom: "4px solid var(--brand)",
         }}
       >
@@ -27,7 +30,7 @@ export default async function HomePage() {
             fontSize: "3rem",
             color: "#ffffff",
             marginBottom: "1rem",
-            fontFamily: "serif", // Traditional feel
+            fontFamily: "serif",
           }}
         >
           Addis Eats
@@ -48,7 +51,7 @@ export default async function HomePage() {
           style={{
             fontSize: "1.1rem",
             padding: "0.8rem 2rem",
-            borderRadius: "4px", // Sharper corners, more traditional
+            borderRadius: "4px",
           }}
         >
           Order Now

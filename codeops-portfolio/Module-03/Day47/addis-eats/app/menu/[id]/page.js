@@ -1,8 +1,11 @@
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { getDish } from "@/lib/db";
+import { getDish, getAllSlugs } from "@/lib/db";
 import AddToCartButton from "../AddToCartButton";
+
+// FORCE STATIC RENDERING
+export const dynamic = "force-static";
 
 export async function generateMetadata({ params }) {
   const { id } = await params;
@@ -13,6 +16,11 @@ export async function generateMetadata({ params }) {
     title: dish.nameEn,
     description: `${dish.description} — ${dish.priceETB} ETB.`,
   };
+}
+
+// Pre-build one static HTML file per known dish
+export function generateStaticParams() {
+  return getAllSlugs().map((slug) => ({ id: slug }));
 }
 
 const getDishImage = (slug) => {
@@ -75,6 +83,7 @@ export default async function DishPage({ params }) {
             alt={dish.nameEn || "Dish image"}
             fill
             style={{ objectFit: "cover", borderRadius: "12px" }}
+            sizes="(max-width: 768px) 100vw, 500px"
             priority
           />
         </div>

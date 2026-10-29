@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 const getDishImage = (slug) => {
-  return `/images/${slug}.jpg`; // Change to .png if your files are png
+  return `/images/${slug}.jpg`;
 };
 
 export default function DishList({ dishes }) {
@@ -24,14 +24,23 @@ export default function DishList({ dishes }) {
               alt={d.nameEn}
               fill
               style={{ objectFit: "cover" }}
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              sizes="(max-width: 768px) 100vw, 300px"
             />
           </div>
 
-          <div className="dish-info" style={{ marginTop: "1rem" }}>
+          <div
+            className="dish-info"
+            style={{
+              marginTop: "1rem",
+              flexGrow: 1,
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            
             <Link
               href={`/menu/${d.slug}`}
-              style={{ textDecoration: "none", color: "inherit" }}
+              style={{ textDecoration: "none", color: "inherit", flexGrow: 1 }}
             >
               <div className="dish-title">
                 <strong>{d.nameEn}</strong>

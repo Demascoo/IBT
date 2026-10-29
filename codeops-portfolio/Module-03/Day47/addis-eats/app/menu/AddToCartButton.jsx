@@ -10,7 +10,6 @@ export default function AddToCartButton({ dish }) {
   const handleAdd = () => {
     addToCart(dish);
     setAdded(true);
-    // Reset the button text after 2 seconds
     setTimeout(() => setAdded(false), 2000);
   };
 
@@ -20,8 +19,8 @@ export default function AddToCartButton({ dish }) {
       className="btn"
       style={{
         width: "100%",
-        maxWidth: "300px",
         background: added ? "green" : "var(--brand)",
+        padding: "0.75rem 1.5rem",
       }}
     >
       {added ? "✓ Added to Cart" : "Add to Cart"}

@@ -3,6 +3,9 @@
 import Link from "next/link";
 import { useCart } from "@/app/providers";
 
+// FORCE STATIC RENDERING
+export const dynamic = "force-static";
+
 export default function CartPage() {
   const { items, updateQuantity, removeFromCart, clearCart } = useCart();
 

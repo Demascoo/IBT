@@ -1,9 +1,7 @@
 import { Suspense } from "react";
 import { db } from "@/lib/db";
 import DishList from "./DishList";
-import FilterShell from "./FilterShell";
 import SearchBox from "./SearchBox";
-import SpecialsStrip from "./SpecialsStrip";
 
 export const metadata = {
   title: "Our Menu",
@@ -11,13 +9,12 @@ export const metadata = {
   alternates: { canonical: "/menu" },
 };
 
+export const dynamic = "force-static";
 export const revalidate = 3600;
-
 
 async function Dishes({ category }) {
   const allDishes = await db.dish.findMany();
 
- 
   const filtered = category
     ? allDishes.filter((d) => d.category === category)
     : allDishes;
@@ -46,23 +43,13 @@ async function Dishes({ category }) {
 }
 
 export default async function MenuPage({ searchParams }) {
-
   const resolvedParams = await searchParams;
   const category = resolvedParams?.category;
-
-   const allDishes = await db.dish.findMany(); 
-
-    const specials = allDishes.filter((d) => d.isSpecial);
 
   return (
     <>
       <h1>Our menu</h1>
-
-  
-      {/* {!category && <SpecialsStrip dishes={specials} />} */}
-
       <SearchBox />
-
       <Suspense
         fallback={
           <div className="skeleton" style={{ height: "400px" }}>
@@ -70,7 +57,6 @@ export default async function MenuPage({ searchParams }) {
           </div>
         }
       >
-       
         <Dishes category={category} />
       </Suspense>
     </>
