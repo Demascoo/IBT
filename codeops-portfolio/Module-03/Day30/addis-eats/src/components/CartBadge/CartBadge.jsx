@@ -6,7 +6,7 @@ function CartBadge() {
 
   return (
     <div className="cart-badge">
-      <span className="cart-icon">🛒</span>
+      <span className="cart-icon">Cart</span>
       {count > 0 && <span className="badge-count">{count}</span>}
     </div>
   );

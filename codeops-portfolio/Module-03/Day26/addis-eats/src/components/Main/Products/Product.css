@@ -1,26 +1,29 @@
 .products {
   flex: 1;
   padding: 20px;
+  background-color: #2e7d32;
 }
 
-.dishes-grid {
+/* .dishes-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 24px;
-}
+  padding: 2px;
+} */
 
 .dish {
-  background: white;
-  border-radius: 12px;
+  background-color: #56bf5b;
+  /* border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 2px 8px lightgray;
-  border: 1px solid #ddd;
+  border: 1px solid #ddd; */
+  margin: 1%;
 }
-
+/* 
 .dish:hover {
   transform: translateY(-6px);
   box-shadow: 0 6px 20px gray;
-}
+} */
 
 .dish-image {
   width: 100%;
@@ -32,13 +35,18 @@
   padding: 16px 20px 20px;
 }
 
-.dish h3 {
-  color: green;
+.dish p {
+  color: black;
   font-size: 20px;
 }
 
 .dish .price {
-  color: green;
+  color: white;
   font-size: 22px;
   font-weight: bold;
 }
+button{
+  color:black;
+  background-color:blueviolet;
+}
+

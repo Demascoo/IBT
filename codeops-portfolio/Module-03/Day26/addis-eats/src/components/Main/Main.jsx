@@ -1,5 +1,5 @@
-import Sidebar from "./Sidebar/sidebar";
-import Menu from "./Menu/menu";
+import Sidebar from "./Sidebar/Sidebar";
+import Menu from "./Menu/Menu";
 import "./main.css";
 
 function Main() {

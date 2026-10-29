@@ -1,26 +1,26 @@
-import dishes from "../../data/menu.json";
+import { useState } from "react";
 import "./Product.css";
 
-function Products() {
- return (
-    <div className="products">
-      <h2> Menu</h2>
-      <div className="dishes-grid">
-        {dishes.map((dish) => (
-          <div key={dish.id} className="dish">
-            <img src={dish.image} alt={dish.name} className="dish-image" />
-            <div className="dish-content">
-              <h3>{dish.name}</h3>
-              <p className="category">{dish.category}</p>
-              <p className="spicy">
-                {dish.spicy ? "🌶️ Spicy" : "😋 Not Spicy"}
-              </p>
-              <p className="price">{dish.price} ETB</p>
-            </div>
-          </div>
-        ))}
+function Dish({ dish }) {
+  const [count, setCount] = useState(0);
+
+  function handleClick() {
+    setCount(count + 1);
+  }
+
+  return (
+    <div className="dish">
+      <div className="img-cont">
+        <img src={dish.image} alt={dish.name} />
+      </div>
+      <p>{dish.name}</p>
+      <p>{dish.price}</p>
+      <div className="state">
+        <button onClick={handleClick}>Add</button>
+        <p>{count}</p>
       </div>
     </div>
   );
 }
-export default Products;
+
+export default Dish;

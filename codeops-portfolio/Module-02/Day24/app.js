@@ -1,12 +1,12 @@
 const MENU_URL = "data/menu.json";
 const STORAGE_KEY = "addiseats-cart";
-const PHONE = /^(?:\+251|0)9\d{8}$/; 
+const PHONE = /^(?:\+251|0)9\d{8}$/;
 const state = {
-  dishes: [], 
+  dishes: [],
   cart: [],
-  search: "", 
-  loading: true, 
-  error: null, 
+  search: "",
+  loading: true,
+  error: null,
 };
 
 const menuEl = document.querySelector("#menu");
@@ -50,7 +50,7 @@ function renderMenu() {
 
   if (state.error) {
     menuEl.innerHTML = `
-      <p class="status-message error">${escapeHtml(state.error)}</p>
+      <p class="status-message error">${state.error}</p>
       <button id="retry" type="button" class="add">Retry</button>
     `;
     return;
@@ -64,7 +64,7 @@ function renderMenu() {
   );
 
   if (shown.length === 0) {
-    menuEl.innerHTML = `<p class="status-message">No dishes found for "${escapeHtml(state.search)}".</p>`;
+    menuEl.innerHTML = `<p class="status-message">No dishes found for "${state.search}".</p>`;
     return;
   }
 
@@ -74,12 +74,12 @@ function renderMenu() {
 function renderDishCard(d) {
   return `
     <article class="dish" data-id="${d.id}">
-      ${d.image ? `<img class="dish-img" src="${escapeHtml(d.image)}" alt="${escapeHtml(d.name)}" loading="lazy" />` : ``}
+      ${d.image ? `<img class="dish-img" src="${d.image}" alt="${d.name}" loading="lazy" />` : ``}
       <div class="dish-top">
-        <h3>${escapeHtml(d.name)}</h3>
-        <span class="category">${escapeHtml(d.category)}</span>
+        <h3>${d.name}</h3>
+        <span class="category">${d.category}</span>
       </div>
-      <p class="desc">${escapeHtml(d.desc || "")}</p>
+      <p class="desc">${d.desc || ""}</p>
       ${d.spicy ? `<span class="spicy">🌶 Spicy</span>` : ``}
       <div class="dish-bottom">
         <span class="price">${d.price} ETB</span>
@@ -111,7 +111,7 @@ function renderCartLines() {
       (i) => `
     <li data-id="${i.id}">
       <span>
-        <span class="line-name">${escapeHtml(i.name)}</span>
+        <span class="line-name">${i.name}</span>
         <span class="line-meta"> × ${i.qty} — ${i.price * i.qty} ETB</span>
       </span>
       <button class="rm" type="button">Remove</button>
@@ -162,11 +162,11 @@ function placeOrder(data) {
   const order = {
     ...data,
     items: state.cart,
-    total: cartTotal(), 
+    total: cartTotal(),
     placedAt: new Date().toISOString(),
   };
   console.log("Order placed:", order);
-  state.cart = []; 
+  state.cart = [];
   save();
   render();
   showConfirmation(order);
@@ -191,7 +191,7 @@ menuEl.addEventListener("click", (e) => {
   if (!e.target.matches(".add")) return;
   const id = Number(e.target.closest(".dish").dataset.id);
   const dish = state.dishes.find((d) => d.id === id);
-  if (!dish) return; // guard: dish not found
+  if (!dish) return;
   const line = state.cart.find((i) => i.id === id);
   if (line) line.qty++;
   else
@@ -223,17 +223,9 @@ checkoutForm.addEventListener("submit", (e) => {
   };
   const msg = validate(data);
   errEl.textContent = msg;
-  if (msg) return; 
+  if (msg) return;
   placeOrder(data);
 });
-
-function escapeHtml(str) {
-  return String(str)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
 
 async function init() {
   load();
