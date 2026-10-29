@@ -13,71 +13,49 @@ export default async function HomePage() {
       {/* ── HERO SECTION ── */}
       <section
         style={{
-          position: "relative",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
           textAlign: "center",
-          padding: "6rem 2rem",
+          padding: "8rem 2rem",
+          background: "linear-gradient(135deg, #1a1a1a 0%, #3a1c1c 100%)",
           minHeight: "500px",
-          color: "white",
         }}
       >
-        {/* Use the local image with priority for LCP */}
-        <Image
-          src="/images/hero.jpg"
-          alt="Traditional Ethiopian food spread"
-          fill
-          priority
-          sizes="100vw"
-          style={{ objectFit: "cover", zIndex: -2 }}
-        />
-
-        {/* Dark overlay for text readability */}
-        <div
+        <h1
           style={{
-            position: "absolute",
-            inset: 0,
-            background: "rgba(0,0,0,0.6)",
-            zIndex: -1,
+            fontSize: "clamp(2.5rem, 6vw, 4.5rem)",
+            color: "#ffffff",
+            marginBottom: "1rem",
+            fontFamily: "serif",
+            letterSpacing: "-0.02em",
           }}
-        />
-
-        <div style={{ position: "relative", zIndex: 1 }}>
-          <h1
-            style={{
-              fontSize: "clamp(2.5rem, 5vw, 4rem)",
-              color: "#ffffff",
-              marginBottom: "1rem",
-              fontFamily: "serif",
-            }}
-          >
-            Addis Eats
-          </h1>
-          <p
-            style={{
-              fontSize: "1.2rem",
-              color: "#cccccc",
-              maxWidth: "600px",
-              margin: "0 auto 2rem",
-            }}
-          >
-            Traditional Ethiopian food, prepared fresh and delivered to your
-            door.
-          </p>
-          <Link
-            href="/menu"
-            className="btn"
-            style={{
-              fontSize: "1.1rem",
-              padding: "0.8rem 2rem",
-              borderRadius: "4px",
-            }}
-          >
-            Order Now
-          </Link>
-        </div>
+        >
+          Addis Eats
+        </h1>
+        <p
+          style={{
+            fontSize: "1.25rem",
+            color: "#cccccc",
+            maxWidth: "600px",
+            margin: "0 auto 3rem",
+          }}
+        >
+          Traditional Ethiopian food, prepared fresh and delivered to your door.
+        </p>
+        <Link
+          href="/menu"
+          className="btn"
+          style={{
+            fontSize: "1.1rem",
+            padding: "1rem 2.5rem",
+            borderRadius: "4px",
+            boxShadow: "0 4px 15px rgba(179, 38, 30, 0.4)",
+          }}
+        >
+          Order Now
+        </Link>
       </section>
 
       {/* ── FEATURED DISHES ── */}
