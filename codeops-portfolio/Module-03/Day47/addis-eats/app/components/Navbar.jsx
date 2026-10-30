@@ -7,24 +7,41 @@ export default function Navbar() {
   const { user, loading } = useAuth();
 
   async function handleSignOut() {
-    // Clear the cookie manually
     document.cookie = "session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    // Force reload to clear state
-    window.location.href = "/";
+    window.location.href = "/signin";
   }
 
-  if (loading) return <div style={{ height: "60px" }} />; // Prevent hydration jump
+  // PREVENT FLASH: If we are still checking the cookie, render nothing
+  if (loading) {
+    return (
+      <header
+        style={{ height: "61px", borderBottom: "1px solid var(--border)" }}
+      />
+    );
+  }
 
   const isStaff = user?.role === "staff";
 
   return (
     <header>
       <nav>
-        <Link href="/" className="nav-brand">
-          Addis Eats
-        </Link>
+        
+        {isStaff ? (
+          <Link
+            href="/dashboard"
+            className="nav-brand"
+            style={{ color: "var(--brand)" }}
+          >
+            Addis Eats Admin
+          </Link>
+        ) : (
+          <Link href="/" className="nav-brand">
+            Addis Eats
+          </Link>
+        )}
 
-        {!isStaff && (
+        {/* Customer Links */}
+        {!isStaff && user && (
           <>
             <Link href="/menu">Menu</Link>
             <Link href="/cart">Cart</Link>
@@ -33,15 +50,10 @@ export default function Navbar() {
           </>
         )}
 
-        {isStaff && (
-          <Link
-            href="/dashboard"
-            style={{ color: "var(--brand)", fontWeight: "bold" }}
-          >
-            Admin Dashboard
-          </Link>
-        )}
+        {/* Staff Links (Already handled by the brand link above) */}
+        {isStaff && null}
 
+        {/* Right side: User Info */}
         {user ? (
           <div
             style={{
