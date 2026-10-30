@@ -17,21 +17,25 @@ export default function Navbar({ initialSession }) {
   return (
     <header>
       <nav>
+        {/* 
+          If Staff: Show "Addis Eats Admin" as the brand (No Home link).
+          If Customer/Guest: Show "Addis Eats" linking to Home.
+        */}
         {isStaff ? (
-          <Link
-            href="/dashboard"
+          <span
             className="nav-brand"
-            style={{ color: "var(--brand)" }}
+            style={{ color: "var(--brand)", cursor: "default" }}
           >
             Addis Eats Admin
-          </Link>
+          </span>
         ) : (
           <Link href="/" className="nav-brand">
             Addis Eats
           </Link>
         )}
 
-        {!isStaff && session && (
+        {/* Show customer links ONLY for non-staff (guests and customers) */}
+        {!isStaff && (
           <>
             <Link href="/menu">Menu</Link>
             <Link href="/cart">Cart</Link>
@@ -40,6 +44,14 @@ export default function Navbar({ initialSession }) {
           </>
         )}
 
+        {/* Show Dashboard link ONLY for staff */}
+        {isStaff && (
+          <Link href="/dashboard" style={{ fontWeight: "bold" }}>
+            Dashboard
+          </Link>
+        )}
+
+        {/* Auth buttons */}
         {session ? (
           <div
             style={{
