@@ -1,78 +1,39 @@
-"use client";
+import { Inter } from "next/font/google";
+import "./globals.css";
+import { Providers } from "./providers";
+import Navbar from "./components/Navbar";
+import { getSession } from "@/lib/session";
 
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+const inter = Inter({ subsets: ["latin"], display: "swap" });
 
-export default function Navbar({ initialSession }) {
-  const [session, setSession] = useState(initialSession);
-  const router = useRouter();
+export const metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL || "https://addis-eats.vercel.app",
+  ),
+  title: {
+    template: "%s | Addis Eats",
+    default: "Addis Eats — Food Delivery",
+  },
+};
 
-  useEffect(() => {
-    setSession(initialSession);
-  }, [initialSession]);
+export const dynamic = "force-dynamic";
 
-  async function handleSignOut() {
-    document.cookie = "session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    setSession(null); // Instantly clear client state
-    router.push("/signin");
-    router.refresh(); // Refresh server components
-  }
-
-  const isStaff = session?.role === "staff";
+export default async function RootLayout({ children }) {
+  const session = await getSession();
 
   return (
-    <header>
-      <nav>
-        {isStaff ? (
-          <Link
-            href="/dashboard"
-            className="nav-brand"
-            style={{ color: "var(--brand)" }}
-          >
-            Addis Eats Admin
-          </Link>
-        ) : (
-          <Link href="/" className="nav-brand">
-            Addis Eats
-          </Link>
-        )}
+    <html lang="en">
+      <body className={inter.className}>
+        <Providers>
+          <Navbar initialSession={session} />
 
-        {!isStaff && session && (
-          <>
-            <Link href="/menu">Menu</Link>
-            <Link href="/cart">Cart</Link>
-            <Link href="/checkout">Checkout</Link>
-            <Link href="/orders">Orders</Link>
-          </>
-        )}
+          {children}
 
-        {session ? (
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "1rem",
-              marginLeft: "auto",
-            }}
-          >
-            <span style={{ fontSize: "0.9rem", color: "var(--text-muted)" }}>
-              Hi, {session.name.split(" ")[0]} {isStaff && "(Staff)"}
-            </span>
-            <button
-              onClick={handleSignOut}
-              className="btn btn-secondary"
-              style={{ padding: "0.4rem 0.8rem", fontSize: "0.85rem" }}
-            >
-              Sign Out
-            </button>
-          </div>
-        ) : (
-          <Link href="/signin" style={{ marginLeft: "auto" }}>
-            Sign In
-          </Link>
-        )}
-      </nav>
-    </header>
+          <footer>
+            <p>© {new Date().getFullYear()} Addis Eats</p>
+          </footer>
+        </Providers>
+      </body>
+    </html>
   );
 }

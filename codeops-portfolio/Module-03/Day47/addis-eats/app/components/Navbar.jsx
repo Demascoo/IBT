@@ -2,24 +2,17 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
 
 export default function Navbar({ initialSession }) {
-  const [session, setSession] = useState(initialSession);
   const router = useRouter();
-
-  useEffect(() => {
-    setSession(initialSession);
-  }, [initialSession]);
+  const session = initialSession;
+  const isStaff = session?.role === "staff";
 
   async function handleSignOut() {
     document.cookie = "session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    setSession(null); // Instantly clear client state
     router.push("/signin");
-    router.refresh(); // Refresh server components
+    router.refresh();
   }
-
-  const isStaff = session?.role === "staff";
 
   return (
     <header>
