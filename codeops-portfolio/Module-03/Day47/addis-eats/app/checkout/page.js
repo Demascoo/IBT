@@ -10,7 +10,9 @@ export default function CheckoutPage() {
   const [state, formAction, pending] = useActionState(placeOrder, null);
 
   useEffect(() => {
-    if (state?.ok) clearCart();
+    if (state?.ok) {
+      clearCart();
+    }
   }, [state?.ok, clearCart]);
 
   const total = items.reduce((sum, item) => sum + item.price * item.qty, 0);
@@ -33,25 +35,48 @@ export default function CheckoutPage() {
       {state?.ok ? (
         <div className="form-card" style={{ textAlign: "center" }}>
           <h2 style={{ color: "green", border: "none" }}>Order Placed!</h2>
-          <Link href="/orders" className="btn">
-            View Orders
+          <p style={{ margin: "1rem 0" }}>
+            Your order ID is <strong>{state.id}</strong>
+          </p>
+          <Link href="/orders" className="btn" style={{ marginTop: "1rem" }}>
+            View My Orders
           </Link>
         </div>
       ) : (
         <div className="form-card">
           {state?.error && (
-            <div style={{ color: "red", marginBottom: "1rem" }}>
+            <div
+              style={{
+                padding: "0.75rem",
+                marginBottom: "1.5rem",
+                background: "#fee",
+                color: "#c00",
+                borderRadius: "6px",
+                fontSize: "0.9rem",
+              }}
+            >
               {state.error}
             </div>
           )}
 
-          <div style={{ marginBottom: "2rem" }}>
-            <h3>Order Summary</h3>
+          <div
+            style={{
+              marginBottom: "2rem",
+              paddingBottom: "1rem",
+              borderBottom: "1px solid var(--border)",
+            }}
+          >
+            <h3 style={{ marginBottom: "1rem" }}>Order Summary</h3>
             <ul style={{ listStyle: "none", padding: 0 }}>
               {items.map((i) => (
                 <li
                   key={i.id}
-                  style={{ display: "flex", justifyContent: "space-between" }}
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    marginBottom: "0.5rem",
+                    fontSize: "0.95rem",
+                  }}
                 >
                   <span>
                     {i.qty} × {i.name}
@@ -60,7 +85,14 @@ export default function CheckoutPage() {
                 </li>
               ))}
             </ul>
-            <h3 style={{ display: "flex", justifyContent: "space-between" }}>
+            <h3
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                marginTop: "1rem",
+                border: "none",
+              }}
+            >
               <span>Total:</span>
               <span style={{ color: "var(--brand)" }}>{total} ETB</span>
             </h3>
@@ -77,11 +109,13 @@ export default function CheckoutPage() {
             <div className="form-group">
               <label className="form-label">Name</label>
               <input name="name" required className="form-input" />
+              {state?.fieldErrors?.name && (
+                <p className="form-error">{state.fieldErrors.name[0]}</p>
+              )}
             </div>
 
             <div className="form-group">
               <label className="form-label">Phone</label>
-              {/* type="tel" brings up the numeric keypad on phones */}
               <input
                 name="phone"
                 type="tel"
@@ -89,6 +123,9 @@ export default function CheckoutPage() {
                 placeholder="0912345678"
                 className="form-input"
               />
+              {state?.fieldErrors?.phone && (
+                <p className="form-error">{state.fieldErrors.phone[0]}</p>
+              )}
             </div>
 
             <div className="form-group">
@@ -106,9 +143,21 @@ export default function CheckoutPage() {
                 <option value="Kazanchis">Kazanchis</option>
                 <option value="Megenagna">Megenagna</option>
               </select>
+              {state?.fieldErrors?.area && (
+                <p className="form-error">{state.fieldErrors.area[0]}</p>
+              )}
             </div>
 
-            {/* Disabled while pending prevents double submits */}
+            <div className="form-group">
+              <label className="form-label">Delivery Notes (Optional)</label>
+              <textarea
+                name="notes"
+                rows={2}
+                className="form-input"
+                placeholder="e.g., Ring the bell twice"
+              />
+            </div>
+
             <button
               type="submit"
               disabled={pending}

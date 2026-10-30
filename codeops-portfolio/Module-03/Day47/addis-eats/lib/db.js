@@ -16,8 +16,10 @@ function readOrders() {
   }
 }
 
-// Helper to write to the file
 function writeOrders(orders) {
+  if (process.env.NODE_ENV === "production") {
+    return;
+  }
   fs.writeFileSync(ordersFilePath, JSON.stringify(orders, null, 2));
 }
 
