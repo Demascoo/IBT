@@ -1,31 +1,44 @@
-import { db } from "@/lib/db";
+"use client";
+
+import { useEffect, useState } from "react";
 import RevenueChart from "./RevenueChart";
 import Link from "next/link";
 
-export const dynamic = "force-dynamic";
+export default function DashboardPage() {
+  const [revenueData, setRevenueData] = useState([]);
+  const [mounted, setMounted] = useState(false);
 
-export const metadata = {
-  title: "Dashboard",
-};
+  useEffect(() => {
+    
+    const ordersStr = localStorage.getItem("addis-orders");
+    const orders = ordersStr ? JSON.parse(ordersStr) : [];
 
-export default async function DashboardPage() {
-  const orders = await db.order.findMany();
+    const areas = ["Bole", "Kazanchis", "Megenagna"];
 
-  const areas = ["Bole", "Kazanchis", "Megenagna"];
+    // Aggregate revenue
+    const data = areas.map((area) => {
+      const areaOrders = orders.filter((o) => o.area === area);
+      const revenue = areaOrders.reduce((sum, o) => sum + (o.total || 0), 0);
+      return { area, revenue };
+    });
 
-  // Real aggregation from your database
-  const revenueData = areas.map((area) => {
-    const areaOrders = orders.filter((o) => o.area === area);
-    const revenue = areaOrders.reduce((sum, o) => sum + (o.total || 0), 0);
+    setRevenueData(data);
+    setMounted(true);
+  }, []);
 
-    return { area, revenue };
-  });
+  if (!mounted)
+    return (
+      <main>
+        <p>Loading...</p>
+      </main>
+    );
 
   return (
     <main>
       <h1>Dashboard</h1>
       <p style={{ color: "var(--text-muted)", marginBottom: "2rem" }}>
-        Overview of your restaurant's performance.
+        Overview of your restaurant's performance based on your local order
+        history.
       </p>
 
       <div
@@ -56,7 +69,7 @@ export default async function DashboardPage() {
 
           <RevenueChart data={revenueData} />
 
-          {/* Accessible Table */}
+          {/* Accessible Data Table */}
           <table
             style={{
               width: "100%",
