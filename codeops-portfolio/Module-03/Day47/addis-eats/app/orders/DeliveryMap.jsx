@@ -4,6 +4,7 @@ import "leaflet/dist/leaflet.css";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 
+// Fix missing default icons
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl:
@@ -13,6 +14,8 @@ L.Icon.Default.mergeOptions({
   shadowUrl:
     "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
 });
+
+// Custom red icon for the restaurant
 const restaurantIcon = new L.Icon({
   iconUrl:
     "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png",
@@ -24,9 +27,10 @@ const restaurantIcon = new L.Icon({
   shadowSize: [41, 41],
 });
 
-// Addis Eats Restaurant Location (Bole area, fixed)
+// Addis Eats Restaurant Location (Fixed)
 const RESTAURANT_COORD = [8.998, 38.792];
 
+// Delivery Area Coordinates
 const AREA_COORDS = {
   Bole: [8.995, 38.7896],
   Kazanchis: [9.018, 38.765],

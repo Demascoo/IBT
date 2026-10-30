@@ -14,11 +14,17 @@ export default function MapWrapper() {
   const [area, setArea] = useState("Bole"); // Default fallback
 
   useEffect(() => {
+    // Read the latest order from LocalStorage
     const data = localStorage.getItem("addis-orders");
     if (data) {
       const orders = JSON.parse(data);
       if (orders.length > 0) {
-        setArea(orders[0].area); // Get the latest order's area
+        // Sort by newest first to get the latest
+        const sorted = orders.sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+        );
+        setArea(sorted[0].area);
       }
     }
   }, []);
