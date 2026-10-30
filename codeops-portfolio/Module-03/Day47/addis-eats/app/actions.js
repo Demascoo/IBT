@@ -13,6 +13,7 @@ import { mockUsers } from "@/lib/users";
 export async function authenticateUser(prevState, formData) {
   const email = formData.get("email");
   const password = formData.get("password");
+  const nextUrl = formData.get("next") || "/"; // Get the next URL from the form
 
   if (!email || !password) return { error: "Missing fields" };
 
@@ -30,10 +31,9 @@ export async function authenticateUser(prevState, formData) {
     path: "/",
   });
 
-  return {
-    success: true,
-    redirectTo: user.role === "staff" ? "/dashboard" : "/",
-  };
+  const redirectTo = user.role === "staff" ? "/dashboard" : nextUrl;
+
+  return { success: true, redirectTo };
 }
 // ───────────────────────────────────────────────────────────
 // ORDERS

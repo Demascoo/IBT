@@ -9,11 +9,11 @@ function SignInForm() {
   const nextUrl = searchParams.get("next") || "/";
   const [state, formAction, pending] = useActionState(authenticateUser, null);
 
-    useEffect(() => {
-      if (state?.success) {
-        window.location.href = state.redirectTo || "/";
-      }
-    }, [state]);
+  useEffect(() => {
+    if (state?.success && state?.redirectTo) {
+      window.location.href = state.redirectTo;
+    }
+  }, [state]);
 
   return (
     <div
@@ -75,6 +75,9 @@ function SignInForm() {
           action={formAction}
           style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
         >
+          {/* Hidden input to pass the next URL to the server action */}
+          <input type="hidden" name="next" value={nextUrl} />
+
           <div className="form-group">
             <label className="form-label">Email</label>
             <input name="email" type="email" required className="form-input" />
