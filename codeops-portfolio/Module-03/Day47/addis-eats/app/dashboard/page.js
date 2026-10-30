@@ -1,41 +1,40 @@
-import { redirect } from "next/navigation";
-import { getSession } from "@/lib/session";
+"use client";
+
+import { useEffect, useState } from "react";
 import RevenueChart from "./RevenueChart";
-import { db } from "@/lib/db";
 
-export const dynamic = "force-dynamic";
+export default function DashboardPage() {
+  const [revenueData, setRevenueData] = useState([]);
+  const [mounted, setMounted] = useState(false);
 
-export const metadata = {
-  title: "Admin Dashboard",
-};
+  useEffect(() => {
+    const ordersStr = localStorage.getItem("addis-orders");
+    const orders = ordersStr ? JSON.parse(ordersStr) : [];
 
-export default async function DashboardPage() {
-  const session = await getSession();
+    const areas = ["Bole", "Kazanchis", "Megenagna"];
 
-  // If not signed in, redirect to signin
-  if (!session) {
-    redirect("/signin?next=/dashboard");
-  }
+    const data = areas.map((area) => {
+      const areaOrders = orders.filter((o) => o.area === area);
+      const revenue = areaOrders.reduce((sum, o) => sum + (o.total || 0), 0);
+      return { area, revenue };
+    });
 
-  // If signed in but not staff, redirect to home
-  if (session.role !== "staff") {
-    redirect("/");
-  }
+    setRevenueData(data);
+    setMounted(true);
+  }, []);
 
-  const orders = await db.order.findMany();
-
-  const areas = ["Bole", "Kazanchis", "Megenagna"];
-  const revenueData = areas.map((area) => {
-    const areaOrders = orders.filter((o) => o.area === area);
-    const revenue = areaOrders.reduce((sum, o) => sum + (o.total || 0), 0);
-    return { area, revenue };
-  });
+  if (!mounted)
+    return (
+      <main>
+        <p>Loading dashboard...</p>
+      </main>
+    );
 
   return (
     <main>
       <h1>Admin Dashboard</h1>
       <p style={{ color: "var(--text-muted)", marginBottom: "2rem" }}>
-        Welcome back, {session.name}.
+        Overview of your restaurant's performance based on live orders.
       </p>
 
       <div

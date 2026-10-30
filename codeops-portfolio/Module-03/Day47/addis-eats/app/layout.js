@@ -16,11 +16,11 @@ export const metadata = {
   },
 };
 
-// Force the layout to be dynamic so it reads the cookie fresh
 export const dynamic = "force-dynamic";
 
 export default async function RootLayout({ children }) {
   const session = await getSession();
+  const isStaff = session?.role === "staff";
 
   async function signOut() {
     "use server";
@@ -40,17 +40,24 @@ export default async function RootLayout({ children }) {
               <Link href="/" className="nav-brand">
                 Addis Eats
               </Link>
-              <Link href="/menu">Menu</Link>
-              <Link href="/cart">Cart</Link>
-              <Link href="/checkout">Checkout</Link>
-              <Link href="/orders">Orders</Link>
 
-              {session?.role === "staff" && (
+              {/* CUSTOMER LINKS (Only show if NOT staff) */}
+              {!isStaff && (
+                <>
+                  <Link href="/menu">Menu</Link>
+                  <Link href="/cart">Cart</Link>
+                  <Link href="/checkout">Checkout</Link>
+                  <Link href="/orders">Orders</Link>
+                </>
+              )}
+
+              {/* STAFF LINKS (Only show if staff) */}
+              {isStaff && (
                 <Link
                   href="/dashboard"
                   style={{ color: "var(--brand)", fontWeight: "bold" }}
                 >
-                  Dashboard
+                  Admin Dashboard
                 </Link>
               )}
 
@@ -66,8 +73,7 @@ export default async function RootLayout({ children }) {
                   <span
                     style={{ fontSize: "0.9rem", color: "var(--text-muted)" }}
                   >
-                    Hi, {session.name.split(" ")[0]}{" "}
-                    {session.role === "staff" && "(Staff)"}
+                    Hi, {session.name.split(" ")[0]} {isStaff && "(Staff)"}
                   </span>
                   <form action={signOut}>
                     <button
