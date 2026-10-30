@@ -1,18 +1,28 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/lib/useAuth";
 import RevenueChart from "./RevenueChart";
 
 export default function DashboardPage() {
+  const { user, loading } = useAuth();
+  const router = useRouter();
   const [revenueData, setRevenueData] = useState([]);
   const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    // If not loading and not staff, kick them out
+    if (!loading && (!user || user.role !== "staff")) {
+      router.push("/");
+    }
+  }, [user, loading, router]);
 
   useEffect(() => {
     const ordersStr = localStorage.getItem("addis-orders");
     const orders = ordersStr ? JSON.parse(ordersStr) : [];
 
     const areas = ["Bole", "Kazanchis", "Megenagna"];
-
     const data = areas.map((area) => {
       const areaOrders = orders.filter((o) => o.area === area);
       const revenue = areaOrders.reduce((sum, o) => sum + (o.total || 0), 0);
@@ -23,12 +33,13 @@ export default function DashboardPage() {
     setMounted(true);
   }, []);
 
-  if (!mounted)
+  if (loading || !mounted)
     return (
       <main>
-        <p>Loading dashboard...</p>
+        <p>Loading...</p>
       </main>
     );
+  if (!user || user.role !== "staff") return null; // Prevent flash of content
 
   return (
     <main>

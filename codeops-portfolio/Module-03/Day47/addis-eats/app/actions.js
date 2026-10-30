@@ -16,23 +16,24 @@ export async function authenticateUser(prevState, formData) {
 
   if (!email || !password) return { error: "Missing fields" };
 
-  // Use the direct list instead of db.user
-  const user = mockUsers.find(
-    (u) => u.email === email && u.password === password,
-  );
+  const users = await db.user.findMany();
+  const user = users.find((u) => u.email === email && u.password === password);
 
   if (!user) return { error: "Invalid email or password" };
 
   const cookieStore = await cookies();
   cookieStore.set("session", user.id, {
-    httpOnly: false, // Must be false for client access
+    httpOnly: false,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     maxAge: 60 * 60 * 24 * 7,
     path: "/",
   });
 
-  return { success: true };
+  return {
+    success: true,
+    redirectTo: user.role === "staff" ? "/dashboard" : "/orders",
+  };
 }
 // ───────────────────────────────────────────────────────────
 // ORDERS
