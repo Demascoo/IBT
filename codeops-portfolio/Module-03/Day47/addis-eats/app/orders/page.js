@@ -1,5 +1,6 @@
+import { Suspense } from "react";
 import MapWrapper from "./MapWrapper";
-import OrderList from "./OrderList";
+import OrdersTable from "./OrdersTable";
 
 export const metadata = {
   title: "Your Orders",
@@ -12,11 +13,20 @@ export default function OrdersPage() {
 
       <div style={{ marginBottom: "2rem" }}>
         <h3 style={{ marginTop: 0 }}>Latest Delivery Location</h3>
-        {/* MapWrapper is a client component that safely loads the map */}
+        
         <MapWrapper area="Bole" />
       </div>
 
-      <OrderList />
+    
+      <Suspense
+        fallback={
+          <div style={{ textAlign: "center", padding: "2rem" }}>
+            Loading orders...
+          </div>
+        }
+      >
+        <OrdersTable />
+      </Suspense>
     </main>
   );
 }
