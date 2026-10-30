@@ -9,6 +9,7 @@ import { cookies } from "next/headers";
 // ───────────────────────────────────────────────────────────
 // AUTHENTICATION
 // ───────────────────────────────────────────────────────────
+
 export async function authenticateUser(prevState, formData) {
   const email = formData.get("email");
   const password = formData.get("password");
@@ -22,15 +23,12 @@ export async function authenticateUser(prevState, formData) {
 
   const cookieStore = await cookies();
   cookieStore.set("session", user.id, {
-    httpOnly: true,
+    httpOnly: false, // MUST BE FALSE so the Client Navbar can read it
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
-    maxAge: 60 * 60 * 24 * 7,
+    maxAge: 60 * 60 * 24 * 7, // 1 week
     path: "/",
   });
-
-
-  revalidatePath("/", "layout");
 
   return { success: true };
 }

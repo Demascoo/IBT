@@ -11,7 +11,6 @@ function SignInForm() {
 
   useEffect(() => {
     if (state?.success) {
-      // Hard reload to force layout update
       window.location.href = nextUrl;
     }
   }, [state, nextUrl]);
@@ -27,7 +26,18 @@ function SignInForm() {
     >
       <div className="form-card" style={{ width: "100%", maxWidth: "400px" }}>
         <h1 style={{ textAlign: "center", marginBottom: "0.5rem" }}>Sign In</h1>
-        
+        <p
+          style={{
+            textAlign: "center",
+            color: "var(--text-muted)",
+            marginBottom: "1rem",
+            fontSize: "0.85rem",
+          }}
+        >
+          <strong>Customer:</strong> customer@addis.com / password123
+          <br />
+          <strong>Staff:</strong> staff@addis.com / staff123
+        </p>
 
         {state?.error && (
           <div
