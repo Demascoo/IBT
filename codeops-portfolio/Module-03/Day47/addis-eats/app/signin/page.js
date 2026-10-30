@@ -4,7 +4,6 @@ import { useActionState, useEffect, Suspense } from "react";
 import { authenticateUser } from "@/app/actions";
 import { useSearchParams } from "next/navigation";
 
-// Next.js 15+ requires useSearchParams to be wrapped in Suspense
 function SignInForm() {
   const searchParams = useSearchParams();
   const nextUrl = searchParams.get("next") || "/";
@@ -12,8 +11,10 @@ function SignInForm() {
 
   useEffect(() => {
     if (state?.success) {
-      // HARD RELOAD: Forces the browser to pick up the new httpOnly cookie
-      window.location.href = nextUrl;
+      // Wait 500ms to make sure the cookie is set by the browser
+      setTimeout(() => {
+        window.location.href = nextUrl;
+      }, 500);
     }
   }, [state, nextUrl]);
 
@@ -28,7 +29,6 @@ function SignInForm() {
     >
       <div className="form-card" style={{ width: "100%", maxWidth: "400px" }}>
         <h1 style={{ textAlign: "center", marginBottom: "0.5rem" }}>Sign In</h1>
-       
 
         {state?.error && (
           <div
@@ -43,6 +43,22 @@ function SignInForm() {
             }}
           >
             {state.error}
+          </div>
+        )}
+
+        {state?.success && (
+          <div
+            style={{
+              padding: "0.75rem",
+              marginBottom: "1.5rem",
+              background: "#e8f5e9",
+              color: "#2e7d32",
+              borderRadius: "6px",
+              fontSize: "0.9rem",
+              textAlign: "center",
+            }}
+          >
+            Success! Redirecting...
           </div>
         )}
 

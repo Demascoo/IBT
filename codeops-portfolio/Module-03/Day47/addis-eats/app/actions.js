@@ -9,7 +9,6 @@ import { cookies } from "next/headers";
 // ───────────────────────────────────────────────────────────
 // AUTHENTICATION
 // ───────────────────────────────────────────────────────────
-
 export async function authenticateUser(prevState, formData) {
   const email = formData.get("email");
   const password = formData.get("password");
@@ -19,14 +18,15 @@ export async function authenticateUser(prevState, formData) {
   const users = await db.user.findMany();
   const user = users.find((u) => u.email === email && u.password === password);
 
-  if (!user) {
-    return { error: "Invalid email or password" };
-  }
+  if (!user) return { error: "Invalid email or password" };
 
+  // Use the standard Next.js 15 cookie API
+  const { cookies } = await import("next/headers");
   const cookieStore = await cookies();
+
   cookieStore.set("session", user.id, {
     httpOnly: true,
-    secure: false, // Set to false for Vercel previews
+    secure: process.env.NODE_ENV === "production", // TRUE on Vercel
     sameSite: "lax",
     maxAge: 60 * 60 * 24 * 7,
     path: "/",
@@ -65,16 +65,16 @@ export async function placeOrder(prevState, formData) {
     return { ok: false, fieldErrors: parsed.error.flatten().fieldErrors };
   }
 
-   const order = await createOrder({
-     ...parsed.data,
-     items,
-     userId: user.id,
-   });
+  const order = await createOrder({
+    ...parsed.data,
+    items,
+    userId: user.id,
+  });
 
-   revalidatePath("/orders");
-   revalidatePath("/dashboard");
+  revalidatePath("/orders");
+  revalidatePath("/dashboard");
 
-   return { ok: true, id: order.id, orderData: order };
+  return { ok: true, id: order.id, orderData: order };
 }
 
 export async function cancelOrder(orderId) {
