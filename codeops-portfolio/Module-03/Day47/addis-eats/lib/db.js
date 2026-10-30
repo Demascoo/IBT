@@ -4,10 +4,19 @@ import path from "path";
 
 const mockDishes = menuData.data;
 
+// Local file path
 const ordersFilePath = path.join(process.cwd(), "orders-db.json");
 
-// Helper to read from the file
+// In-memory fallback for Vercel
+let memoryOrders = [];
+
 function readOrders() {
+  // If we are on Vercel (production), use memory
+  if (process.env.NODE_ENV === "production") {
+    return [...memoryOrders];
+  }
+
+  // Otherwise, use the local file
   try {
     const data = fs.readFileSync(ordersFilePath, "utf-8");
     return JSON.parse(data);
@@ -17,9 +26,13 @@ function readOrders() {
 }
 
 function writeOrders(orders) {
+  // If we are on Vercel, save to memory
   if (process.env.NODE_ENV === "production") {
+    memoryOrders = orders;
     return;
   }
+
+  // Otherwise, write to the file
   fs.writeFileSync(ordersFilePath, JSON.stringify(orders, null, 2));
 }
 
@@ -55,12 +68,10 @@ export const db = {
   },
 };
 
-// Fetch a single dish by SLUG
 export async function getDish(slug) {
   return mockDishes.find((d) => d.slug === slug) || null;
 }
 
-// Get all slugs for generateStaticParams
 export function getAllSlugs() {
   return mockDishes.map((d) => d.slug);
 }

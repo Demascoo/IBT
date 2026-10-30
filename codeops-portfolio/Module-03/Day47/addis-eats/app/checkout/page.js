@@ -4,16 +4,24 @@ import { useActionState, useEffect } from "react";
 import { placeOrder } from "@/app/actions";
 import { useCart } from "@/app/providers";
 import Link from "next/link";
+import { useRouter } from "next/navigation"; // Add this
 
 export default function CheckoutPage() {
   const { items, clearCart } = useCart();
   const [state, formAction, pending] = useActionState(placeOrder, null);
+  const router = useRouter(); // Add this
 
   useEffect(() => {
     if (state?.ok) {
       clearCart();
+      // Wait 1.5 seconds so the user sees the success message, then redirect
+      const timer = setTimeout(() => {
+        router.push("/orders");
+        router.refresh(); // Force a fresh fetch of the orders
+      }, 1500);
+      return () => clearTimeout(timer);
     }
-  }, [state?.ok, clearCart]);
+  }, [state?.ok, clearCart, router]);
 
   const total = items.reduce((sum, item) => sum + item.price * item.qty, 0);
 
@@ -38,9 +46,9 @@ export default function CheckoutPage() {
           <p style={{ margin: "1rem 0" }}>
             Your order ID is <strong>{state.id}</strong>
           </p>
-          <Link href="/orders" className="btn" style={{ marginTop: "1rem" }}>
-            View My Orders
-          </Link>
+          <p style={{ color: "var(--text-muted)", fontSize: "0.9rem" }}>
+            Redirecting to your orders...
+          </p>
         </div>
       ) : (
         <div className="form-card">
