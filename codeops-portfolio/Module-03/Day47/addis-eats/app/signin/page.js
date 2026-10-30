@@ -9,11 +9,11 @@ function SignInForm() {
   const nextUrl = searchParams.get("next") || "/";
   const [state, formAction, pending] = useActionState(authenticateUser, null);
 
-  useEffect(() => {
-    if (state?.success) {
-      window.location.href = nextUrl;
-    }
-  }, [state, nextUrl]);
+    useEffect(() => {
+      if (state?.success) {
+        window.location.href = state.redirectTo || "/";
+      }
+    }, [state]);
 
   return (
     <div

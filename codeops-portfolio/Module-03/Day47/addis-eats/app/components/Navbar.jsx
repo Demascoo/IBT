@@ -1,31 +1,29 @@
 "use client";
 
 import Link from "next/link";
-import { useAuth } from "@/lib/useAuth";
+import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 
-export default function Navbar() {
-  const { user, loading } = useAuth();
+export default function Navbar({ initialSession }) {
+  const [session, setSession] = useState(initialSession);
+  const router = useRouter();
+
+  useEffect(() => {
+    setSession(initialSession);
+  }, [initialSession]);
 
   async function handleSignOut() {
     document.cookie = "session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    window.location.href = "/signin";
+    setSession(null); // Instantly clear client state
+    router.push("/signin");
+    router.refresh(); // Refresh server components
   }
 
-  // PREVENT FLASH: If we are still checking the cookie, render nothing
-  if (loading) {
-    return (
-      <header
-        style={{ height: "61px", borderBottom: "1px solid var(--border)" }}
-      />
-    );
-  }
-
-  const isStaff = user?.role === "staff";
+  const isStaff = session?.role === "staff";
 
   return (
     <header>
       <nav>
-        
         {isStaff ? (
           <Link
             href="/dashboard"
@@ -40,8 +38,7 @@ export default function Navbar() {
           </Link>
         )}
 
-        {/* Customer Links */}
-        {!isStaff && user && (
+        {!isStaff && session && (
           <>
             <Link href="/menu">Menu</Link>
             <Link href="/cart">Cart</Link>
@@ -50,11 +47,7 @@ export default function Navbar() {
           </>
         )}
 
-        {/* Staff Links (Already handled by the brand link above) */}
-        {isStaff && null}
-
-        {/* Right side: User Info */}
-        {user ? (
+        {session ? (
           <div
             style={{
               display: "flex",
@@ -64,7 +57,7 @@ export default function Navbar() {
             }}
           >
             <span style={{ fontSize: "0.9rem", color: "var(--text-muted)" }}>
-              Hi, {user.name.split(" ")[0]} {isStaff && "(Staff)"}
+              Hi, {session.name.split(" ")[0]} {isStaff && "(Staff)"}
             </span>
             <button
               onClick={handleSignOut}
