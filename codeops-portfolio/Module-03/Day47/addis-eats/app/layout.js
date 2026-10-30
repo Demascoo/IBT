@@ -16,8 +16,20 @@ export const metadata = {
   },
 };
 
+// Force the layout to be dynamic so it reads the cookie fresh
+export const dynamic = "force-dynamic";
+
 export default async function RootLayout({ children }) {
   const session = await getSession();
+
+  async function signOut() {
+    "use server";
+    const { cookies } = await import("next/headers");
+    const cookieStore = await cookies();
+    cookieStore.delete("session");
+    const { redirect } = await import("next/navigation");
+    redirect("/");
+  }
 
   return (
     <html lang="en">
@@ -33,7 +45,6 @@ export default async function RootLayout({ children }) {
               <Link href="/checkout">Checkout</Link>
               <Link href="/orders">Orders</Link>
 
-              {/* ONLY SHOW DASHBOARD TO STAFF */}
               {session?.role === "staff" && (
                 <Link
                   href="/dashboard"
@@ -58,13 +69,7 @@ export default async function RootLayout({ children }) {
                     Hi, {session.name.split(" ")[0]}{" "}
                     {session.role === "staff" && "(Staff)"}
                   </span>
-                  <form
-                    action={async () => {
-                      "use server";
-                      const { cookies } = await import("next/headers");
-                      (await cookies()).delete("session");
-                    }}
-                  >
+                  <form action={signOut}>
                     <button
                       type="submit"
                       className="btn btn-secondary"

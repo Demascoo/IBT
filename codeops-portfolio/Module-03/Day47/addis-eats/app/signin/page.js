@@ -1,18 +1,18 @@
 "use client";
 
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, Suspense } from "react";
 import { authenticateUser } from "@/app/actions";
 import { useSearchParams } from "next/navigation";
 
-export default function SignInPage() {
+// Next.js 15+ requires useSearchParams to be wrapped in Suspense
+function SignInForm() {
   const searchParams = useSearchParams();
   const nextUrl = searchParams.get("next") || "/";
-
   const [state, formAction, pending] = useActionState(authenticateUser, null);
 
   useEffect(() => {
     if (state?.success) {
-  
+      // HARD RELOAD: Forces the browser to pick up the new httpOnly cookie
       window.location.href = nextUrl;
     }
   }, [state, nextUrl]);
@@ -28,6 +28,7 @@ export default function SignInPage() {
     >
       <div className="form-card" style={{ width: "100%", maxWidth: "400px" }}>
         <h1 style={{ textAlign: "center", marginBottom: "0.5rem" }}>Sign In</h1>
+       
 
         {state?.error && (
           <div
@@ -51,13 +52,7 @@ export default function SignInPage() {
         >
           <div className="form-group">
             <label className="form-label">Email</label>
-            <input
-              name="email"
-              type="email"
-              required
-              className="form-input"
-              placeholder="customer@addis.com"
-            />
+            <input name="email" type="email" required className="form-input" />
           </div>
 
           <div className="form-group">
@@ -67,7 +62,6 @@ export default function SignInPage() {
               type="password"
               required
               className="form-input"
-              placeholder="••••••••"
             />
           </div>
 
@@ -82,5 +76,13 @@ export default function SignInPage() {
         </form>
       </div>
     </div>
+  );
+}
+
+export default function SignInPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SignInForm />
+    </Suspense>
   );
 }
