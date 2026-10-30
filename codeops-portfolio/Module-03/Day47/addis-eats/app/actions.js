@@ -32,7 +32,7 @@ export async function authenticateUser(prevState, formData) {
 
   return {
     success: true,
-    redirectTo: user.role === "staff" ? "/dashboard" : "/orders",
+    redirectTo: user.role === "staff" ? "/dashboard" : "/",
   };
 }
 // ───────────────────────────────────────────────────────────

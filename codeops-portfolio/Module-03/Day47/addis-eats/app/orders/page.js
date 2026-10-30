@@ -12,12 +12,10 @@ export default function OrdersPage() {
       <h1>Your Orders</h1>
 
       <div style={{ marginBottom: "2rem" }}>
-        <h3 style={{ marginTop: 0 }}>Latest Delivery Location</h3>
-        
-        <MapWrapper area="Bole" />
+        <h3 style={{ marginTop: 0 }}>Delivery Location</h3>
+        <MapWrapper />
       </div>
 
-    
       <Suspense
         fallback={
           <div style={{ textAlign: "center", padding: "2rem" }}>
