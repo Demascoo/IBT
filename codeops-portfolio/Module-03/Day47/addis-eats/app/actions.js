@@ -20,17 +20,17 @@ export async function authenticateUser(prevState, formData) {
 
   if (!user) return { error: "Invalid email or password" };
 
-  // Use the standard Next.js 15 cookie API
-  const { cookies } = await import("next/headers");
   const cookieStore = await cookies();
-
   cookieStore.set("session", user.id, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production", // TRUE on Vercel
+    secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     maxAge: 60 * 60 * 24 * 7,
     path: "/",
   });
+
+
+  revalidatePath("/", "layout");
 
   return { success: true };
 }

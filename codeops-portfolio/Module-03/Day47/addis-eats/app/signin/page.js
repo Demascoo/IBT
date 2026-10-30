@@ -11,10 +11,8 @@ function SignInForm() {
 
   useEffect(() => {
     if (state?.success) {
-      // Wait 500ms to make sure the cookie is set by the browser
-      setTimeout(() => {
-        window.location.href = nextUrl;
-      }, 500);
+      // Hard reload to force layout update
+      window.location.href = nextUrl;
     }
   }, [state, nextUrl]);
 
@@ -29,6 +27,7 @@ function SignInForm() {
     >
       <div className="form-card" style={{ width: "100%", maxWidth: "400px" }}>
         <h1 style={{ textAlign: "center", marginBottom: "0.5rem" }}>Sign In</h1>
+        
 
         {state?.error && (
           <div
