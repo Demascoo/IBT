@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { mockUsers } from "@/lib/users"; // Import users directly
 
 export function useAuth() {
   const [user, setUser] = useState(null);
@@ -17,13 +18,10 @@ export function useAuth() {
       return;
     }
 
-    import("@/lib/db").then(({ db }) => {
-      db.user.findMany().then((users) => {
-        const found = users.find((u) => u.id === userId);
-        setUser(found || null);
-        setLoading(false);
-      });
-    });
+    // Find user in the local list
+    const found = mockUsers.find((u) => u.id === userId);
+    setUser(found || null);
+    setLoading(false);
   }, []);
 
   return { user, loading };

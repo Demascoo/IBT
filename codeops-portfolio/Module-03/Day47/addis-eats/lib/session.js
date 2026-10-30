@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { db } from "./db";
+import { mockUsers } from "./users";
 
 export async function getSession() {
   const cookieStore = await cookies();
@@ -7,8 +7,7 @@ export async function getSession() {
 
   if (!token) return null;
 
-  const users = await db.user.findMany();
-  const user = users.find((u) => u.id === token);
+  const user = mockUsers.find((u) => u.id === token);
 
   if (!user) return null;
 

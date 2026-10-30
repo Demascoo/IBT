@@ -5,7 +5,7 @@ import { orderSchema } from "@/lib/schema";
 import { createOrder, markCancelled, getOrder, db } from "@/lib/db";
 import { getSession } from "@/lib/session";
 import { cookies } from "next/headers";
-
+import { mockUsers } from "@/lib/users";
 // ───────────────────────────────────────────────────────────
 // AUTHENTICATION
 // ───────────────────────────────────────────────────────────
@@ -16,23 +16,24 @@ export async function authenticateUser(prevState, formData) {
 
   if (!email || !password) return { error: "Missing fields" };
 
-  const users = await db.user.findMany();
-  const user = users.find((u) => u.email === email && u.password === password);
+  // Use the direct list instead of db.user
+  const user = mockUsers.find(
+    (u) => u.email === email && u.password === password,
+  );
 
   if (!user) return { error: "Invalid email or password" };
 
   const cookieStore = await cookies();
   cookieStore.set("session", user.id, {
-    httpOnly: false, // MUST BE FALSE so the Client Navbar can read it
+    httpOnly: false, // Must be false for client access
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
-    maxAge: 60 * 60 * 24 * 7, // 1 week
+    maxAge: 60 * 60 * 24 * 7,
     path: "/",
   });
 
   return { success: true };
 }
-
 // ───────────────────────────────────────────────────────────
 // ORDERS
 // ───────────────────────────────────────────────────────────
