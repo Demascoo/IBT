@@ -17,7 +17,6 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }) {
-  // This will make the layout dynamic, BUT we will override it in pages.
   const session = await getSession();
 
   return (
@@ -33,7 +32,16 @@ export default async function RootLayout({ children }) {
               <Link href="/cart">Cart</Link>
               <Link href="/checkout">Checkout</Link>
               <Link href="/orders">Orders</Link>
-              <Link href="/dashboard">Dashboard</Link>
+
+              {/* ONLY SHOW DASHBOARD TO STAFF */}
+              {session?.role === "staff" && (
+                <Link
+                  href="/dashboard"
+                  style={{ color: "var(--brand)", fontWeight: "bold" }}
+                >
+                  Dashboard
+                </Link>
+              )}
 
               {session ? (
                 <div
@@ -47,9 +55,9 @@ export default async function RootLayout({ children }) {
                   <span
                     style={{ fontSize: "0.9rem", color: "var(--text-muted)" }}
                   >
-                    Hi, {session.name.split(" ")[0]}
+                    Hi, {session.name.split(" ")[0]}{" "}
+                    {session.role === "staff" && "(Staff)"}
                   </span>
-                  {/* We use a form action for sign out to clear cookies */}
                   <form
                     action={async () => {
                       "use server";
