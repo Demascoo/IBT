@@ -2,15 +2,20 @@
 
 import { useActionState, useEffect } from "react";
 import { authenticateUser } from "@/app/actions";
+import { useSearchParams } from "next/navigation";
 
 export default function SignInPage() {
+  const searchParams = useSearchParams();
+  const nextUrl = searchParams.get("next") || "/";
+
   const [state, formAction, pending] = useActionState(authenticateUser, null);
 
   useEffect(() => {
     if (state?.success) {
-      window.location.href = "/orders";
+  
+      window.location.href = nextUrl;
     }
-  }, [state]);
+  }, [state, nextUrl]);
 
   return (
     <div
@@ -23,16 +28,6 @@ export default function SignInPage() {
     >
       <div className="form-card" style={{ width: "100%", maxWidth: "400px" }}>
         <h1 style={{ textAlign: "center", marginBottom: "0.5rem" }}>Sign In</h1>
-        <p
-          style={{
-            textAlign: "center",
-            color: "var(--text-muted)",
-            marginBottom: "2rem",
-            fontSize: "0.9rem",
-          }}
-        >
-          Try: customer@addis.com / password123
-        </p>
 
         {state?.error && (
           <div

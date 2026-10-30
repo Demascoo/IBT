@@ -4,6 +4,7 @@ export function proxy(request) {
   const session = request.cookies.get("session");
 
   if (!session) {
+
     const url = new URL("/signin", request.url);
     url.searchParams.set("next", request.nextUrl.pathname);
     return NextResponse.redirect(url);

@@ -1,6 +1,12 @@
 "use client";
 
-import { createContext, useContext, useState, useCallback } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
 
 const CartContext = createContext(null);
 
@@ -12,6 +18,27 @@ export function useCart() {
 
 export function Providers({ children }) {
   const [items, setItems] = useState([]);
+  const [isMounted, setIsMounted] = useState(false);
+
+  // 1. Load cart from localStorage when the app starts
+  useEffect(() => {
+    const saved = localStorage.getItem("addis-cart");
+    if (saved) {
+      try {
+        setItems(JSON.parse(saved));
+      } catch {
+        setItems([]);
+      }
+    }
+    setIsMounted(true);
+  }, []);
+
+  // 2. Save cart to localStorage whenever it changes
+  useEffect(() => {
+    if (isMounted) {
+      localStorage.setItem("addis-cart", JSON.stringify(items));
+    }
+  }, [items, isMounted]);
 
   const addToCart = useCallback((dish) => {
     setItems((prev) => {
@@ -49,8 +76,10 @@ export function Providers({ children }) {
     );
   }, []);
 
-  // Now clearCart has a stable memory address
   const clearCart = useCallback(() => setItems([]), []);
+
+  // Prevent hydration mismatch by not rendering until mounted
+  if (!isMounted) return null;
 
   return (
     <CartContext.Provider
