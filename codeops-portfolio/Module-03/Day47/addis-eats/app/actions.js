@@ -65,15 +65,16 @@ export async function placeOrder(prevState, formData) {
     return { ok: false, fieldErrors: parsed.error.flatten().fieldErrors };
   }
 
-  const order = await createOrder({
-    ...parsed.data,
-    items,
-    userId: user.id,
-  });
+   const order = await createOrder({
+     ...parsed.data,
+     items,
+     userId: user.id,
+   });
 
-  revalidatePath("/orders");
-  revalidatePath("/dashboard");
-  return { ok: true, id: order.id };
+   revalidatePath("/orders");
+   revalidatePath("/dashboard");
+
+   return { ok: true, id: order.id, orderData: order };
 }
 
 export async function cancelOrder(orderId) {

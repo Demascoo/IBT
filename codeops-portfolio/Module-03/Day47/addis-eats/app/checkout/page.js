@@ -12,16 +12,22 @@ export default function CheckoutPage() {
   const router = useRouter(); // Add this
 
   useEffect(() => {
-    if (state?.ok) {
+    if (state?.ok && state?.orderData) {
+  
+      const existing = JSON.parse(localStorage.getItem("addis-orders") || "[]");
+      localStorage.setItem(
+        "addis-orders",
+        JSON.stringify([...existing, state.orderData]),
+      );
+
       clearCart();
-      // Wait 1.5 seconds so the user sees the success message, then redirect
       const timer = setTimeout(() => {
         router.push("/orders");
-        router.refresh(); // Force a fresh fetch of the orders
+        router.refresh();
       }, 1500);
       return () => clearTimeout(timer);
     }
-  }, [state?.ok, clearCart, router]);
+  }, [state, clearCart, router]);
 
   const total = items.reduce((sum, item) => sum + item.price * item.qty, 0);
 
