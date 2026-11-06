@@ -1,7 +1,7 @@
 import menuData from "@/data/menu.json";
 import fs from "fs";
 import path from "path";
-import { mockUsers } from "./users"; // Import users
+import { mockUsers } from "./users";
 
 const mockDishes = menuData.data;
 const ordersFilePath = path.join(process.cwd(), "orders-db.json");
