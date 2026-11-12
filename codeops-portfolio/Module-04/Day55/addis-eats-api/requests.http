@@ -1,0 +1,45 @@
+@host = http://localhost:3000/api
+
+### RESTAURANTS
+GET {{host}}/restaurants
+
+###
+GET {{host}}/restaurants/1
+
+###
+POST {{host}}/restaurants
+Content-Type: application/json
+
+{
+  "name": "Sishu",
+  "area": "Kazanchis"
+}
+
+### DISHES
+GET {{host}}/dishes
+
+###
+GET {{host}}/dishes?restaurantId=1
+
+###
+GET {{host}}/dishes/1
+
+###
+POST {{host}}/dishes
+Content-Type: application/json
+
+{
+  "restaurantId": 1,
+  "name": "Tibs Firfir",
+  "priceSantim": 25000
+}
+
+### DISHES (Error test - missing restaurant)
+POST {{host}}/dishes
+Content-Type: application/json
+
+{
+  "restaurantId": 99,
+  "name": "Ghost Burger",
+  "priceSantim": 5000
+}
