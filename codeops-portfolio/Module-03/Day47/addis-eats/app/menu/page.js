@@ -9,16 +9,18 @@ export const metadata = {
   alternates: { canonical: "/menu" },
 };
 
-export const dynamic = "force-static";
-export const revalidate = 3600;
+// REMOVE force-static so the page can read URL parameters
+export const dynamic = "force-dynamic";
 
 async function Dishes({ category }) {
   const allDishes = await db.dish.findMany();
 
+  // Filter by category if one is selected
   const filtered = category
     ? allDishes.filter((d) => d.category === category)
     : allDishes;
 
+  // Group them
   const byCategory = filtered.reduce((acc, d) => {
     (acc[d.category] ??= []).push(d);
     return acc;
@@ -33,8 +35,18 @@ async function Dishes({ category }) {
   return (
     <>
       {Object.entries(byCategory).map(([cat, list]) => (
-        <section key={cat} style={{ marginBottom: "2.5rem" }}>
-          <h2>{cat}</h2>
+        <section key={cat} style={{ marginBottom: "3rem" }}>
+          <h2
+            style={{
+              fontFamily: "var(--font-serif)",
+              fontSize: "1.75rem",
+              borderBottom: "2px solid var(--border)",
+              paddingBottom: "0.5rem",
+              marginBottom: "1.5rem",
+            }}
+          >
+            {cat}
+          </h2>
           <DishList dishes={list} />
         </section>
       ))}
@@ -48,7 +60,9 @@ export default async function MenuPage({ searchParams }) {
 
   return (
     <>
-      <h1>Our menu</h1>
+      <h1 style={{ fontFamily: "var(--font-serif)", marginBottom: "1rem" }}>
+        Our Menu
+      </h1>
       <SearchBox />
       <Suspense
         fallback={
