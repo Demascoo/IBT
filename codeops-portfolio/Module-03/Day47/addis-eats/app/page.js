@@ -9,7 +9,7 @@ export default async function HomePage() {
   const featuredDishes = allDishes.filter((d) => d.isSpecial).slice(0, 3);
 
   return (
-    <main style={{ padding: 0, background: "#fff" }}>
+    <main style={{ padding: 0, background: "var(--bg-color)" }}>
       {/* ── HERO SECTION ── */}
       <section
         style={{
@@ -18,124 +18,119 @@ export default async function HomePage() {
           alignItems: "center",
           justifyContent: "center",
           textAlign: "center",
-          padding: "8rem 2rem",
-          background: "linear-gradient(135deg, #1a1a1a 0%, #3a1c1c 100%)",
-          minHeight: "500px",
+          padding: "10rem 2rem",
+          background:
+            "radial-gradient(circle at center, #2A1B18 0%, #0E0B0A 100%)",
+          minHeight: "600px",
+          position: "relative",
         }}
       >
-        <h1
-          style={{
-            fontSize: "clamp(2.5rem, 6vw, 4.5rem)",
-            color: "#ffffff",
-            marginBottom: "1rem",
-            fontFamily: "serif",
-            letterSpacing: "-0.02em",
-          }}
-        >
-          Addis Eats
-        </h1>
-        <p
-          style={{
-            fontSize: "1.25rem",
-            color: "#cccccc",
-            maxWidth: "600px",
-            margin: "0 auto 3rem",
-          }}
-        >
-          Traditional Ethiopian food, prepared fresh and delivered to your door.
-        </p>
-        <Link
-          href="/menu"
-          className="btn"
-          style={{
-            fontSize: "1.1rem",
-            padding: "1rem 2.5rem",
-            borderRadius: "4px",
-            boxShadow: "0 4px 15px rgba(179, 38, 30, 0.4)",
-          }}
-        >
-          Order Now
-        </Link>
+        <div style={{ position: "relative", zIndex: 1 }}>
+          <p
+            style={{
+              color: "var(--accent-gold)",
+              letterSpacing: "3px",
+              textTransform: "uppercase",
+              marginBottom: "1rem",
+              fontSize: "0.9rem",
+            }}
+          >
+            Authentic Ethiopian Cuisine
+          </p>
+          <h1
+            style={{
+              fontSize: "clamp(3rem, 7vw, 5.5rem)",
+              color: "#ffffff",
+              marginBottom: "1.5rem",
+              fontFamily: "var(--font-serif)",
+              lineHeight: 1.1,
+            }}
+          >
+            Experience Addis <br />
+            <span style={{ color: "var(--brand)" }}>At Home</span>
+          </h1>
+          <p
+            style={{
+              fontSize: "1.25rem",
+              color: "#B0B0B0",
+              maxWidth: "600px",
+              margin: "0 auto 3rem",
+              fontWeight: 300,
+            }}
+          >
+            Traditional dishes prepared fresh and delivered to your door. From
+            fiery Kitfo to our vegan Beyaynetu.
+          </p>
+          <Link
+            href="/menu"
+            className="btn"
+            style={{
+              fontSize: "1rem",
+              padding: "1.2rem 3rem",
+              borderRadius: "50px",
+              boxShadow: "0 10px 25px rgba(179, 38, 30, 0.4)",
+            }}
+          >
+            Order Now
+          </Link>
+        </div>
       </section>
 
       {/* ── FEATURED DISHES ── */}
       <section
-        style={{ maxWidth: "1000px", margin: "4rem auto", padding: "0 2rem" }}
+        style={{
+          maxWidth: "1200px",
+          margin: "-5rem auto 6rem",
+          padding: "0 2rem",
+          position: "relative",
+          zIndex: 2,
+        }}
       >
-        <div style={{ textAlign: "center", marginBottom: "3rem" }}>
-          <h2 style={{ fontSize: "2rem", marginBottom: "0.5rem" }}>
-            Our Specialties
-          </h2>
-          <p style={{ color: "var(--text-muted)" }}>
-            A taste of Ethiopia's finest dishes.
-          </p>
-        </div>
-
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-            gap: "2rem",
+            gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+            gap: "2.5rem",
           }}
         >
           {featuredDishes.map((dish) => (
             <Link
               key={dish.id}
               href={`/menu/${dish.slug}`}
-              style={{
-                display: "block",
-                textDecoration: "none",
-                color: "inherit",
-              }}
+              className="dish-card"
+              style={{ textDecoration: "none" }}
             >
               <div
-                style={{
-                  position: "relative",
-                  height: "250px",
-                  width: "100%",
-                  marginBottom: "1rem",
-                }}
+                style={{ position: "relative", height: "250px", width: "100%" }}
               >
                 <Image
                   src={`/images/${dish.slug}.jpg`}
                   alt={dish.nameEn}
                   fill
-                  style={{ objectFit: "cover", borderRadius: "4px" }}
+                  style={{ objectFit: "cover" }}
                   sizes="(max-width: 768px) 100vw, 33vw"
                 />
               </div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "baseline",
-                  borderBottom: "1px solid var(--border)",
-                  paddingBottom: "0.5rem",
-                }}
-              >
-                <h3 style={{ margin: 0, fontSize: "1.2rem" }}>{dish.nameEn}</h3>
-                <span style={{ fontWeight: "bold" }}>{dish.priceETB} ETB</span>
+              <div style={{ padding: "2rem" }}>
+                <div className="dish-title">
+                  <strong>{dish.nameEn}</strong>
+                  <span className="dish-price">{dish.priceETB} ETB</span>
+                </div>
+                <p
+                  style={{
+                    color: "var(--text-muted)",
+                    fontSize: "0.9rem",
+                    marginBottom: "0.5rem",
+                  }}
+                >
+                  {dish.nameAm}
+                </p>
+                <p className="dish-desc">
+                  {dish.description.substring(0, 70)}...
+                </p>
               </div>
-              <p
-                style={{
-                  color: "var(--text-muted)",
-                  fontSize: "0.9rem",
-                  marginTop: "0.5rem",
-                }}
-              >
-                {dish.nameAm}
-              </p>
             </Link>
           ))}
-        </div>
-
-        <div style={{ textAlign: "center", marginTop: "4rem" }}>
-          <Link
-            href="/menu"
-            style={{ fontSize: "1.1rem", textDecoration: "underline" }}
-          >
-            View the full menu
-          </Link>
         </div>
       </section>
     </main>

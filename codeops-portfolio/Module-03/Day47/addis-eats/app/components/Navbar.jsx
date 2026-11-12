@@ -17,24 +17,14 @@ export default function Navbar({ initialSession }) {
   return (
     <header>
       <nav>
-        {/* 
-          If Staff: Show "Addis Eats Admin" as the brand (No Home link).
-          If Customer/Guest: Show "Addis Eats" linking to Home.
-        */}
         {isStaff ? (
-          <span
-            className="nav-brand"
-            style={{ color: "var(--brand)", cursor: "default" }}
-          >
-            Addis Eats Admin
-          </span>
+          <span className="nav-brand">Addis Eats Admin</span>
         ) : (
           <Link href="/" className="nav-brand">
             Addis Eats
           </Link>
         )}
 
-        {/* Show customer links ONLY for non-staff (guests and customers) */}
         {!isStaff && (
           <>
             <Link href="/menu">Menu</Link>
@@ -44,14 +34,15 @@ export default function Navbar({ initialSession }) {
           </>
         )}
 
-        {/* Show Dashboard link ONLY for staff */}
         {isStaff && (
-          <Link href="/dashboard" style={{ fontWeight: "bold" }}>
+          <Link
+            href="/dashboard"
+            style={{ color: "var(--accent-gold)", fontWeight: "600" }}
+          >
             Dashboard
           </Link>
         )}
 
-        {/* Auth buttons */}
         {session ? (
           <div
             style={{
@@ -61,19 +52,27 @@ export default function Navbar({ initialSession }) {
               marginLeft: "auto",
             }}
           >
-            <span style={{ fontSize: "0.9rem", color: "var(--text-muted)" }}>
+            <span style={{ fontSize: "0.9rem", color: "#999" }}>
               Hi, {session.name.split(" ")[0]} {isStaff && "(Staff)"}
             </span>
             <button
               onClick={handleSignOut}
               className="btn btn-secondary"
-              style={{ padding: "0.4rem 0.8rem", fontSize: "0.85rem" }}
+              style={{
+                padding: "0.4rem 0.8rem",
+                fontSize: "0.8rem",
+                borderColor: "#444",
+                color: "#CCC",
+              }}
             >
               Sign Out
             </button>
           </div>
         ) : (
-          <Link href="/signin" style={{ marginLeft: "auto" }}>
+          <Link
+            href="/signin"
+            style={{ marginLeft: "auto", color: "var(--accent-gold)" }}
+          >
             Sign In
           </Link>
         )}
