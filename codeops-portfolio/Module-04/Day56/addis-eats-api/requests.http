@@ -1,0 +1,24 @@
+@host = http://localhost:3000/api
+
+### 1. TEST POST (Create a new Order)
+POST {{host}}/orders
+Content-Type: application/json
+
+{
+  "customer": "Sasuke Uchiha",
+  "area": "Megenagna",
+  "totalSantim": 15000,
+  "dishes": [{"name": "Ramen", "priceSantim": 15000}],
+  "phone": "+251911000000"
+}
+
+### 2. TEST PATCH (Update an Order's Status)
+PATCH {{host}}/orders/1/status
+Content-Type: application/json
+
+{
+  "status": "PREPARING"
+}
+
+### 3. TEST DELETE (Cancel an Order)
+DELETE {{host}}/orders/2
