@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { Order } from './order.types';
+import type { Order } from './order.types';
+import { SEED_ORDERS } from './order.seed';
 
 export const ORDER_REPOSITORY = 'ORDER_REPOSITORY';
 
@@ -11,18 +12,20 @@ export interface OrderRepository {
 
 @Injectable()
 export class InMemoryOrderRepository implements OrderRepository {
-  private readonly orders: Order[] = [];
+  private readonly orders = new Map<number, Order>(
+    SEED_ORDERS.map((o) => [o.id, o]),
+  );
 
   save(order: Order): Order {
-    this.orders.push(order);
+    this.orders.set(order.id, order);
     return order;
   }
 
   byId(id: number): Order | undefined {
-    return this.orders.find((o) => o.id === id);
+    return this.orders.get(id);
   }
 
   all(): Order[] {
-    return this.orders;
+    return Array.from(this.orders.values());
   }
 }
