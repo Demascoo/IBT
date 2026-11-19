@@ -1,0 +1,136 @@
+# @host = http://localhost:3000/api
+
+# ### 1. TEST POST (Create a new Order)
+# POST {{host}}/orders
+# Content-Type: application/json
+
+# {
+#   "customer": "Sasuke Uchiha",
+#   "area": "Megenagna",
+#   "totalSantim": 15000,
+#   "dishes": [{"name": "Ramen", "priceSantim": 15000}],
+#   "phone": "+251911000000"
+# }
+
+# ### 2. TEST PATCH (Update an Order's Status)
+# PATCH {{host}}/orders/1/status
+# Content-Type: application/json
+
+# {
+#   "status": "PREPARING"
+# }
+
+# ### 3. TEST DELETE (Cancel an Order)
+# DELETE {{host}}/orders/2
+
+
+
+# POST http://localhost:3000/api/v1/orders
+# Content-Type: application/json
+
+# {
+#   "customer": "Sasuke Uchiha",
+#   "area": "Megenagna",
+#   "totalSantim": 15000,
+#   "dishes": [{"name": "Ramen", "priceSantim": 15000}]
+# }
+
+
+# DELETE http://localhost:3000/api/v1/orders/1
+
+# ### Test 1: Nested Array Failure (Should be 400)
+# POST http://localhost:3000/api/v1/orders
+# Content-Type: application/json
+
+# {
+#   "customer": "Test",
+#   "area": "Bole",
+#   "totalSantim": 5000,
+#   "lines": [ { "dishId": "abc", "quantity": 2 } ]
+# }
+
+
+
+# ### Test 2: TeleBirr Validation (Should be 400)
+# POST http://localhost:3000/api/v1/orders
+# Content-Type: application/json
+
+# {
+#   "customer": "Test",
+#   "area": "Bole",
+#   "totalSantim": 5000,
+#   "lines": [{"dishId": 1, "quantity": 1}],
+#   "phone": "0812345678"
+# }
+
+
+
+# ### Test 3: Santim Validation (Should be 400)
+# POST http://localhost:3000/api/v1/orders
+# Content-Type: application/json
+
+# {
+#   "customer": "Test",
+#   "area": "Bole",
+#   "totalSantim": 240.5,
+#   "lines": [{"dishId": 1, "quantity": 1}]
+# }
+
+
+
+# ### Test 4: Extra fields rejected (Should be 400)
+# POST http://localhost:3000/api/v1/orders
+# Content-Type: application/json
+
+# {
+#   "customer": "Test",
+#   "area": "Bole",
+#   "totalSantim": 5000,
+#   "lines": [{"dishId": 1, "quantity": 1}],
+#   "isAdmin": true
+# }
+
+
+# ### Test 5: Invalid Status Transition (Should be 409)
+# PATCH http://localhost:3000/api/v1/orders/4/status
+# Content-Type: application/json
+
+# {
+#   "status": "PENDING"
+# }
+
+
+# {
+#   "statusCode": 400,
+#   "message": ["..."],
+#   "path": "/api/v1/orders",
+#   "timestamp": "2026-11-18T...",
+#   "requestId": "unknown"
+# }
+
+
+
+Checkpoint 1 & 2: Middleware (Request ID)
+http
+### 1. Check Headers (Should have an x-request-id)
+GET http://localhost:3000/api/v1/orders
+
+### 2. Honour a Client ID (Should return x-request-id: me-123)
+GET http://localhost:3000/api/v1/orders
+x-request-id: me-123
+
+### 3. Trace the Error (Should return requestId: trace-me-404 in JSON)
+curl -i -H "x-request-id: trace-me-404" http://localhost:3000/api/v1/orders/99999
+
+Checkpoint 3: Guards (The Bouncer)
+http
+### 4. No API Key (Should be 401 Unauthorized)
+DELETE http://localhost:3000/api/v1/orders/1
+
+### 5. Wrong API Key (Should be 403 Forbidden)
+DELETE http://localhost:3000/api/v1/orders/1
+x-api-key: totally-wrong-key
+
+### 6. Correct API Key (Should be 204 No Content)
+DELETE http://localhost:3000/api/v1/orders/1
+x-api-key: super-secret-key
