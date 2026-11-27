@@ -1,0 +1,86 @@
+### ==========================================
+### CHECKPOINT 1: RATE LIMITING (LOGIN)
+### ==========================================
+
+### Attempt 1 (401)
+POST http://localhost:3000/api/v1/auth/login
+Content-Type: application/json
+
+{ "email": "almaz@test.com", "password": "wrong" }
+
+### Attempt 2 (401)
+POST http://localhost:3000/api/v1/auth/login
+Content-Type: application/json
+
+{ "email": "almaz@test.com", "password": "wrong" }
+
+### Attempt 3 (401)
+POST http://localhost:3000/api/v1/auth/login
+Content-Type: application/json
+
+{ "email": "almaz@test.com", "password": "wrong" }
+
+### Attempt 4 (401)
+POST http://localhost:3000/api/v1/auth/login
+Content-Type: application/json
+
+{ "email": "almaz@test.com", "password": "wrong" }
+
+### Attempt 5 (401)
+POST http://localhost:3000/api/v1/auth/login
+Content-Type: application/json
+
+{ "email": "almaz@test.com", "password": "wrong" }
+
+### Attempt 6 (Should be 429 Too Many Requests)
+# Look at the Response Headers for "Retry-After"
+POST http://localhost:3000/api/v1/auth/login
+Content-Type: application/json
+
+{ "email": "almaz@test.com", "password": "wrong" }
+
+
+### ==========================================
+### CHECKPOINT 2: HEALTH CHECK (SKIP THROTTLE)
+### ==========================================
+
+### Health Check (Should ALWAYS be 200)
+# You can run this 100 times and it will never be 429
+GET http://localhost:3000/api/v1/health
+
+
+### ==========================================
+### CHECKPOINT 3: BROWSING IS FINE
+### ==========================================
+
+### Get Restaurants (Should be 200)
+# This uses the 'default' limit (300 per minute)
+GET http://localhost:3000/api/v1/restaurants
+
+
+
+curl -i http://localhost:3000/api/v1/health
+
+
+
+
+
+
+
+
+
+
+
+
+###day 65
+
+POST http://localhost:3000/api/v1/orders
+Authorization: Bearer <ALMAZ_TOKEN>
+Content-Type: application/json
+
+{
+  "customer": "Almaz Bekele",
+  "area": "Bole",
+  "totalSantim": 24000,
+  "lines": [{"dishId": 1, "quantity": 1}]
+}

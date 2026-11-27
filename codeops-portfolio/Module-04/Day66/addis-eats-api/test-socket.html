@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>WebSocket Test</title>
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+</head>
+<body>
+  <h1>Check your console (F12)</h1>
+  <script>
+    const socket = io('http://localhost:3000/orders');
+    
+    socket.on('connect', () => {
+      console.log('✅ Connected! Socket ID:', socket.id);
+      socket.emit('watchOrder', { orderId: 1 });
+    });
+    
+    // This listens for the explicit emit
+    socket.on('watching', (data) => {
+      console.log('👀 Now watching:', data);
+    });
+    
+    socket.on('orderStatusUpdated', (data) => {
+      console.log('🔔 REAL-TIME UPDATE RECEIVED!', data);
+    });
+  </script>
+</body>
+</html>

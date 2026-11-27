@@ -1,0 +1,327 @@
+# @host = http://localhost:3000/api
+
+# ### 1. TEST POST (Create a new Order)
+# POST {{host}}/orders
+# Content-Type: application/json
+
+# {
+#   "customer": "Sasuke Uchiha",
+#   "area": "Megenagna",
+#   "totalSantim": 15000,
+#   "dishes": [{"name": "Ramen", "priceSantim": 15000}],
+#   "phone": "+251911000000"
+# }
+
+# ### 2. TEST PATCH (Update an Order's Status)
+# PATCH {{host}}/orders/1/status
+# Content-Type: application/json
+
+# {
+#   "status": "PREPARING"
+# }
+
+# ### 3. TEST DELETE (Cancel an Order)
+# DELETE {{host}}/orders/2
+
+
+
+# POST http://localhost:3000/api/v1/orders
+# Content-Type: application/json
+
+# {
+#   "customer": "Sasuke Uchiha",
+#   "area": "Megenagna",
+#   "totalSantim": 15000,
+#   "dishes": [{"name": "Ramen", "priceSantim": 15000}]
+# }
+
+
+# DELETE http://localhost:3000/api/v1/orders/1
+
+# ### Test 1: Nested Array Failure (Should be 400)
+# POST http://localhost:3000/api/v1/orders
+# Content-Type: application/json
+
+# {
+#   "customer": "Test",
+#   "area": "Bole",
+#   "totalSantim": 5000,
+#   "lines": [ { "dishId": "abc", "quantity": 2 } ]
+# }
+
+
+
+# ### Test 2: TeleBirr Validation (Should be 400)
+# POST http://localhost:3000/api/v1/orders
+# Content-Type: application/json
+
+# {
+#   "customer": "Test",
+#   "area": "Bole",
+#   "totalSantim": 5000,
+#   "lines": [{"dishId": 1, "quantity": 1}],
+#   "phone": "0812345678"
+# }
+
+
+
+# ### Test 3: Santim Validation (Should be 400)
+# POST http://localhost:3000/api/v1/orders
+# Content-Type: application/json
+
+# {
+#   "customer": "Test",
+#   "area": "Bole",
+#   "totalSantim": 240.5,
+#   "lines": [{"dishId": 1, "quantity": 1}]
+# }
+
+
+
+# ### Test 4: Extra fields rejected (Should be 400)
+# POST http://localhost:3000/api/v1/orders
+# Content-Type: application/json
+
+# {
+#   "customer": "Test",
+#   "area": "Bole",
+#   "totalSantim": 5000,
+#   "lines": [{"dishId": 1, "quantity": 1}],
+#   "isAdmin": true
+# }
+
+
+# ### Test 5: Invalid Status Transition (Should be 409)
+# PATCH http://localhost:3000/api/v1/orders/4/status
+# Content-Type: application/json
+
+# {
+#   "status": "PENDING"
+# }
+
+
+# {
+#   "statusCode": 400,
+#   "message": ["..."],
+#   "path": "/api/v1/orders",
+#   "timestamp": "2026-11-18T...",
+#   "requestId": "unknown"
+# }
+
+
+
+# Checkpoint 1 & 2: Middleware (Request ID)
+# http
+# ### 1. Check Headers (Should have an x-request-id)
+# GET http://localhost:3000/api/v1/orders
+
+# ### 2. Honour a Client ID (Should return x-request-id: me-123)
+# GET http://localhost:3000/api/v1/orders
+# x-request-id: me-123
+
+# ### 3. Trace the Error (Should return requestId: trace-me-404 in JSON)
+# curl -i -H "x-request-id: trace-me-404" http://localhost:3000/api/v1/orders/99999
+
+# Checkpoint 3: Guards (The Bouncer)
+# http
+# ### 4. No API Key (Should be 401 Unauthorized)
+# DELETE http://localhost:3000/api/v1/orders/1
+
+# ### 5. Wrong API Key (Should be 403 Forbidden)
+# DELETE http://localhost:3000/api/v1/orders/1
+# x-api-key: totally-wrong-key
+
+# ### 6. Correct API Key (Should be 204 No Content)
+# DELETE http://localhost:3000/api/v1/orders/1
+# x-api-key: super-secret-key
+
+
+
+# GET http://localhost:3000/api/v1/orders
+
+
+# curl -X DELETE http://localhost:3000/api/v1/orders/1 -H "x-api-key: super-secret-key"
+
+
+
+day61
+# ### Test 1: Register
+# POST http://localhost:3000/api/v1/auth/register
+# Content-Type: application/json
+
+# {
+#   "email": "test@test.com",
+#   "password": "password123"
+# }
+
+
+
+# ### Test 2: Login
+# POST http://localhost:3000/api/v1/auth/login
+# Content-Type: application/json
+
+# {
+#   "email": "test@test.com",
+#   "password": "password123"
+# }
+
+
+
+
+# ### Test 3: Public Menu
+# GET http://localhost:3000/api/v1/restaurants
+
+
+
+
+# ### Test 4: Locked Orders
+# GET http://localhost:3000/api/v1/orders
+
+
+
+
+# ### Test 5: Authenticated Orders
+# GET http://localhost:3000/api/v1/orders
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjE3OTUxODk0NDk2OTksImVtYWlsIjoidGVzdEB0ZXN0LmNvbSIsImlhdCI6MTc5NTE4OTY4OSwiZXhwIjoxNzk1MTkwNTg5fQ.2t7XFST-vqnIZkBYD0EZ2ZPT-WVtQbIMoWywvQAJvzo
+
+
+### day62
+
+### ==========================================
+### PART 1: CREATE THE USERS (Run these first)
+### ==========================================
+
+### 1. Register Almaz (Gets ID 1)
+POST http://localhost:3000/api/v1/auth/register
+Content-Type: application/json
+
+{
+  "email": "almaz@test.com",
+  "password": "password123"
+}
+
+### 2. Register Dawit (Gets ID 2)
+POST http://localhost:3000/api/v1/auth/register
+Content-Type: application/json
+
+{
+  "email": "dawit@test.com",
+  "password": "password123"
+}
+
+### 3. Register Staff (Gets ID 3, with 'staff' role)
+POST http://localhost:3000/api/v1/auth/register
+Content-Type: application/json
+
+{
+  "email": "staff@test.com",
+  "password": "password123"
+}
+
+
+### ==========================================
+### PART 2: LOGIN & COPY TOKENS
+### ==========================================
+
+### 4. Login Almaz (Copy the accessToken,,,eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiYWxtYXpAdGVzdC5jb20iLCJyb2xlcyI6WyJjdXN0b21lciJdLCJpYXQiOjE3OTU1NDc0MTAsImV4cCI6MTc5NTU0ODMxMH0.DjedizXBtmXFGL5hFS_4VKX-ehExtjrDrE0431NTvLI)
+POST http://localhost:3000/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "almaz@test.com",
+  "password": "password123"
+}
+
+### 5. Login Dawit (Copy the accessToken,,,,eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIsImVtYWlsIjoiZGF3aXRAdGVzdC5jb20iLCJyb2xlcyI6WyJjdXN0b21lciJdLCJpYXQiOjE3OTU1NDc0MzksImV4cCI6MTc5NTU0ODMzOX0.BTVaG7DoEgnA4otnc27k4qQyUSEz49ETWCZjLcBxhoA)
+POST http://localhost:3000/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "dawit@test.com",
+  "password": "password123"
+}
+
+### 6. Login Staff (Copy the accessToken,,,,,eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjMsImVtYWlsIjoic3RhZmZAdGVzdC5jb20iLCJyb2xlcyI6WyJzdGFmZiJdLCJpYXQiOjE3OTU1NDc0NTQsImV4cCI6MTc5NTU0ODM1NH0.l4_Btn_oR05OQZBxEQRqJbT4OETjaw_QeyKKPU2OMoM)
+POST http://localhost:3000/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "staff@test.com",
+  "password": "password123"
+}
+
+
+### ==========================================
+### PART 3: TESTING DAY 62 (Replace tokens!)
+### ==========================================
+
+### 7. Almaz reads her own order (Should be 200 OK)
+# Paste Almaz's token below:
+GET http://localhost:3000/api/v1/orders/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiYWxtYXpAdGVzdC5jb20iLCJyb2xlcyI6WyJjdXN0b21lciJdLCJpYXQiOjE3OTU1NDc0MTAsImV4cCI6MTc5NTU0ODMxMH0.DjedizXBtmXFGL5hFS_4VKX-ehExtjrDrE0431NTvLI
+
+### 8. Dawit tries to read Almaz's order (Should be 404 Not Found)
+# Paste Dawit's token below:
+GET http://localhost:3000/api/v1/orders/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIsImVtYWlsIjoiZGF3aXRAdGVzdC5jb20iLCJyb2xlcyI6WyJjdXN0b21lciJdLCJpYXQiOjE3OTU1NDc0MzksImV4cCI6MTc5NTU0ODMzOX0.BTVaG7DoEgnA4otnc27k4qQyUSEz49ETWCZjLcBxhoA
+
+### 9. Staff tries to read Almaz's order (Should be 200 OK)
+# Paste Staff's token below:
+GET http://localhost:3000/api/v1/orders/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjMsImVtYWlsIjoic3RhZmZAdGVzdC5jb20iLCJyb2xlcyI6WyJzdGFmZiJdLCJpYXQiOjE3OTU1NDc0NTQsImV4cCI6MTc5NTU0ODM1NH0.l4_Btn_oR05OQZBxEQRqJbT4OETjaw_QeyKKPU2OMoM
+
+### 10. Almaz lists all orders (Should ONLY see her own orders)
+# Paste Almaz's token below:
+GET http://localhost:3000/api/v1/orders
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiYWxtYXpAdGVzdC5jb20iLCJyb2xlcyI6WyJjdXN0b21lciJdLCJpYXQiOjE3OTU1NDc0MTAsImV4cCI6MTc5NTU0ODMxMH0.DjedizXBtmXFGL5hFS_4VKX-ehExtjrDrE0431NTvLI
+
+### 11. Dawit tries to delete Almaz's order (Should be 404 Not Found)
+# Paste Dawit's token below:
+DELETE http://localhost:3000/api/v1/orders/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIsImVtYWlsIjoiZGF3aXRAdGVzdC5jb20iLCJyb2xlcyI6WyJjdXN0b21lciJdLCJpYXQiOjE3OTU1NDc0MzksImV4cCI6MTc5NTU0ODMzOX0.BTVaG7DoEgnA4otnc27k4qQyUSEz49ETWCZjLcBxhoA
+
+### 12. Almaz deletes her own order (Should be 204 No Content)
+# Paste Almaz's token below:
+DELETE http://localhost:3000/api/v1/orders/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiYWxtYXpAdGVzdC5jb20iLCJyb2xlcyI6WyJjdXN0b21lciJdLCJpYXQiOjE3OTU1NDc0MTAsImV4cCI6MTc5NTU0ODMxMH0.DjedizXBtmXFGL5hFS_4VKX-ehExtjrDrE0431NTvLI
+
+
+
+
+
+###day65
+
+
+POST http://localhost:3000/api/v1/orders
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiYWxtYXpAdGVzdC5jb20iLCJyb2xlcyI6WyJjdXN0b21lciJdLCJpYXQiOjE3OTU2MjY5NzUsImV4cCI6MTc5NTYyNzg3NX0.Y6SNPH6ZTOnjcll61zlF-bGZ-_jdj8lxWzgX7D0EArg
+Content-Type: application/json
+
+{
+  "customer": "Almaz Bekele",
+  "area": "Bole",
+  "totalSantim": 24000,
+  "lines": [{"dishId": 1, "quantity": 1}]
+}
+
+
+
+
+
+
+
+
+
+
+###day66
+
+PATCH http://localhost:3000/api/v1/orders/1/status
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoic3RhZmZAdGVzdC5jb20iLCJyb2xlcyI6WyJzdGFmZiJdLCJpYXQiOjE3OTU3Njg2ODMsImV4cCI6MTc5NTc2OTU4M30.rKomCmNjgQ_YNXBVRmzXrR7J6BXuASWnkwAWcxyn16U
+Content-Type: application/json
+
+{
+  "status": "ON_THE_WAY"
+}
+
+
+
+npx serve .
